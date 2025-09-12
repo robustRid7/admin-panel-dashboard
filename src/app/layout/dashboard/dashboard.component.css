@@ -68,7 +68,7 @@
   color: #fff;
   border-radius: 10px;
   font-size: 0.8rem;
-  background-color: darkred!important; 
+  /* background-color: darkred!important;  */
   margin: 0;               /* remove extra margins */
 }
 
@@ -82,6 +82,21 @@
 /* .chart-box {
   height: 400px;
 } */
+ .stat-card.active-users {
+  background: linear-gradient(135deg, #4caf50, #2e7d32); /* green */
+}
+
+.stat-card.sessions {
+  background: linear-gradient(135deg, #2196f3, #1565c0); /* blue */
+}
+
+.stat-card.page-views {
+  background: linear-gradient(135deg, #ff9800, #e65100); /* orange */
+}
+
+.stat-card.engaged-sessions {
+  background: linear-gradient(135deg, #9c27b0, #6a1b9a); /* purple */
+}
 
 
 .charts-container {
