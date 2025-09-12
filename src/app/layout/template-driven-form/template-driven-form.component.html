@@ -1,0 +1,94 @@
+<div class="main-wrapper">
+  <div class="">
+    <div class="row align-items-center">
+      <div class="col-12">
+        <div class="heading-row">
+          <h3>Template Driven Form</h3>
+        </div>
+      </div>
+    </div>
+    <div class="shadow-box mt-0">
+      <div class="row align-items-center">
+        <div class="col-12 my-2">
+          <div class="mb-5">
+            <p>
+              Simple basic form (Agar basic form banana hai jisme jada
+              complaxity nhi hai)
+            </p>
+            <p>Easy to start</p>
+            <p>Based on Templete(HTML)</p>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4">
+              <form (ngSubmit)="onSubmit(myForm)" #myForm="ngForm">
+
+                <div ngModelGroup="userDetail" #userDetail="ngModelGroup">
+                    <div class="form-group mb-4">
+                      <label for="username">Username*</label>
+                      <input
+                        id="username"
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="userName"
+                        name="username"
+                        placeholder="Enter Username"
+                        required
+                      />
+                      <!-- <small class="text-danger">Please enter Username</small> -->
+                      <small *ngIf="userName" >Your username is {{userName}}</small>
+                    </div>
+    
+                    <div class="form-group mb-4">
+                      <label for="email">Email*</label>
+                      <input
+                        id="email"
+                        type="email"
+                        class="form-control"
+                        ngModel
+                        name="email"
+                        placeholder="Enter email"
+                        required
+                        #email="ngModel"
+                      />
+                      <!-- <small *ngIf="!email.valid && email.touched" class="text-danger">Please enter Email</small> -->
+    
+                    </div>
+                    <span class="text-danger" *ngIf="!userDetail.valid && userDetail.touched" >Please enter valid details</span>
+                </div>
+
+                <div class="form-group mb-4">
+                  <label for="course">Select Course*</label>
+                  <select required name="course" [ngModel]="defaultCourse" class="form-select" id="course">
+                    <option value="Angular">Angular</option>
+                    <option value="Html">Html</option>
+                    <option value="Css">Css</option>
+                  </select>
+                  <!-- <small class="text-danger">Please select Course</small> -->
+
+                </div>
+
+                <!-- <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="flexCheckDefault"  >
+                        <label for="flexCheckDefault" class="form-check-label">Remeber Me</label>
+                    </div> -->
+
+                    <div class="form-check" *ngFor="let gender of genders">
+                        <input [ngModel]="defaultGender" value="{{gender.value}}" class="form-check-input" type="radio" name="gender" id="{{gender.id}}">
+                        <label class="form-check-label" for="{{gender.id}}">
+                          {{gender.value}}
+                        </label>
+                    </div>
+                     
+
+                <div>
+                  <button class="btn btn-primary w-100" [disabled]="!myForm.valid" >Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

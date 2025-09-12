@@ -1,0 +1,67 @@
+<div class="wrapper">
+    <div class="container-fluid">
+        <div class="row vh-100 bg-primary">
+            <div class="col-md-6 col-lg-8 vh-100   d-flex justify-content-center align-items-end">
+                <img src="assets/images/taxi2.png" alt="" width="90%">
+            </div>
+    
+            <div class="col-md-6 col-lg-4 bg-transparent rounded-5 shadow d-flex align-items-center justify-content-center">
+                <div class="wrapper-form w-100 ">
+                    <div class="login-card">
+
+                        <div class="top-logo text-center mb-4">
+                          <img src="assets/images/logo.png" alt="logo">
+                      </div>
+        
+                          <div class="log-top-txt">
+                               <div class="text-center">
+                                  <h4>OTP</h4>
+                                  <p>6 digit otp has been sent to your registered
+                                    mail Id</p>
+                              </div>
+        
+        
+                          </div>
+        
+                          <div class="custom-input mb-4">
+                              <mat-label class="d-block">Enter Otp</mat-label>
+
+                              <div class="otp-wrapper">
+                                <ng-otp-input   [config]="{length:6}"> </ng-otp-input>
+        
+        
+                               
+                            </div>
+                                
+                             
+                             
+                          </div>
+        
+                         
+        
+        
+        
+                        
+        
+        
+        
+        
+                          <div class="auth-btn">
+                              <button mat-flat-button class="w-100"  color="primary" routerLink="/reset-password">Verify</button>
+                          </div>
+
+                          <div class="mt-3">
+                            <p class="small-txt" routerLink="/forgot-password"  style="cursor: pointer;">Resend OTP</p>
+                        </div> 
+        
+                          <div class="rec-send text-center mt-1">
+                           
+                            <span class="" >00:10 sec</span>
+                        </div>
+        
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

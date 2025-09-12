@@ -1,0 +1,71 @@
+<div class="wrapper">
+  <div class="container-fluid">
+    <div class="row vh-100 bg-primary">
+      <div class="col-md-6 col-lg-8 vh-100 d-flex justify-content-center align-items-end">
+        <img src="assets/images/taxi2.png" alt="" width="90%" />
+      </div>
+
+      <div class="col-md-6 col-lg-4 bg-transparent rounded-5 shadow d-flex align-items-center justify-content-center">
+        <div class="wrapper-form w-100">
+          <div class="login-card">
+            <div class="top-logo text-center mb-4">
+              <img src="assets/images/logo.png" alt="logo" />
+            </div>
+
+            <div class="log-top-txt">
+              <div class="text-center">
+                <h4>Login</h4>
+                <p>Continue with your Email ID or Password</p>
+              </div>
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <!-- User ID -->
+              <div class="custom-input mb-4">
+                <mat-label class="d-block">User ID</mat-label>
+                <mat-form-field appearance="outline" class="w-100">
+                  <input matInput placeholder="Enter User ID" formControlName="userId" />
+                  <mat-error *ngIf="f['userId'].errors?.['required']">
+                    UserId is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <!-- Password -->
+              <div class="custom-input mb-4">
+                <mat-label class="d-block">Password</mat-label>
+                <mat-form-field appearance="outline" class="w-100">
+                  <input
+                    placeholder="Enter Password"
+                    matInput
+                    formControlName="password"
+                    [type]="hide ? 'password' : 'text'"
+                  />
+                  <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+                    <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+                  </button>
+
+                  <mat-error *ngIf="f['password'].errors?.['required']">
+                    Password is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <!-- Submit -->
+              <div class="auth-btn">
+                <button mat-flat-button color="primary" class="w-100" type="submit" [disabled]="loading">
+                  {{ loading ? 'Logging in...' : 'Login' }}
+                </button>
+              </div>
+            </form>
+
+            <!-- Forgot Password -->
+            <div class="mt-3 text-center">
+              <span class="small-txt cursor-pointer" routerLink="/forgot-password">Forgot Password ?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

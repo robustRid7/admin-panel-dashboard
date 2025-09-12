@@ -1,0 +1,120 @@
+<div class="main-wrapper">
+    <div class="">
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div class="heading-row">
+            <h3>Class/Style Binding (Property Binding)</h3>
+          </div>
+        </div>
+      </div>
+      <div class="shadow-box mt-0">
+        <div class="row align-items-center">
+          <div class="col-12 my-2">
+            <!-- <div class="search-input">
+              <input type="text" class="form-control" placeholder="Search..." />
+              <i class="bi bi-search"></i>
+            </div> -->
+  
+            
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mb-5">
+                        <h4 class="text-center">
+                            Class Binding
+                        </h4>
+                    </div>
+
+                    <div class="box" [class.myclass]="mypro">
+                        Class Binding
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="mb-5">
+                        <h4 class="text-center">
+                            Style Binding
+                        </h4>
+                    </div>
+
+                    <div class="box-wrapper" [style.margin-top]="mystyle">
+                        Style Binding
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="mb-5">
+                        <h4 class="text-center">
+                            Use Ternary operators in style binding
+                        </h4>
+                    </div>
+
+                    <div class="box-wrapper1" [style.color]="isOnline? mystylecolor : 'red'">
+                        Style Binding
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h5 class="text-center">
+                        if we want multiple class Property and multiple style Property binding so we should use angular inbuilt directive (ngStyle and ngClass)
+                    </h5>
+                </div>
+
+                <div class="col-6">
+                    <h5 class="text-center">ngClass</h5>
+                    <div class="d-flex justify-content-between">
+                        <div class="box-wrap" [ngClass]="'class1 class2 class3'" >
+                            ngClass Binding
+                        </div>
+    
+                        <div class="box-wrap" [ngClass]="multiClasses" >
+                            ngClass Binding
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-6">
+                    <h5 class="text-center">ngStyle</h5>
+                    <div class="d-flex justify-content-between">
+                        <div class="box-style" [ngStyle]="{
+                            'background-color':'red',
+                            'width':'150px',
+                            'height':'150px',
+                            'border-radius':'10px',
+                            'display':'flex',
+                            'align-items':'center',
+                            'justify-content':'center',
+                            'text-align':'center',
+                            'color':'#fff'
+
+
+                            }" >
+                            ngClass Binding
+                        </div>
+    
+                        <div class="box-style" [ngStyle]="multiStyle" >
+                            ngClass Binding
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+          
+  
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

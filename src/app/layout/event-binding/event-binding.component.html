@@ -1,0 +1,103 @@
+<div class="main-wrapper">
+    <div class="">
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div class="heading-row">
+            <h3>Event Binding</h3>
+          </div>
+        </div>
+      </div>
+      <div class="shadow-box mt-0">
+        <div class="row align-items-center">
+          <div class="col-12 my-2">
+        
+  
+            <div class="mb-5">
+                <h4 class="text-center">Bind the data from view(html) to component(ts)</h4>
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="mb-5">
+                      <input type="text" class="form-control" value="myInputText" (click)="onInputClick($event)" >
+                    </div>
+
+                    <div class="mb-5">
+                      <button mat-flat-button color="primary" class="w-100" (click)="onAddCart()" >Add To Cart</button>
+                      <p>{{msg}}</p>
+                    </div>
+
+                    <div class="mb-5 ">
+                      <div class="d-flex justify-content-between">
+                        <button class="btn btn-primary" value="Laptop" (click)="getCartData($event)"  >Laptop</button>
+                        <button class="btn btn-success" value="Television"  (click)="getCartData($event)"  >Television</button>
+                        <button class="btn btn-warning" value="Mouse"  (click)="getCartData($event)" >Mouse</button>
+                        <button class="btn btn-info" value="Computer"  (click)="getCartData($event)" >Computer</button>
+                      </div>
+                      <p>{{msg1}}</p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Title</h4>
+
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <th>Product</th>
+                            <td>{{product.name}}</td>
+                          </tr>
+                          <tr>
+                            <th>id</th>
+                            <td>{{product.id}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                        <p class="card-text">
+                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magnam dolorem officia nisi eaque vitae beatae ad placeat, tempore eum voluptatum!
+                        </p>
+                      <button color="primary" mat-flat-button>Click Me</button>
+        
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title text-center">Employee Detail</h4>
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <th>Username</th>
+                            <th>ID</th>
+                          </tr>
+
+                          <tr *ngFor="let productLists2 of productList1" >
+                            <td>{{productLists2.username}}</td>
+                            <td>{{productLists2.id}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+        
+                    </div>
+                  </div>
+                </div>
+            </div>
+          
+  
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,58 @@
+<div class="main-wrapper">
+    <div class="">
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div class="heading-row">
+            <h3>Interpolation (Property Binding)</h3>
+          </div>
+        </div>
+      </div>
+      <div class="shadow-box mt-0">
+        <div class="row align-items-center">
+
+          
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">{{product}}</h4>
+                <p class="card-text">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magnam dolorem officia nisi eaque vitae beatae ad placeat, tempore eum voluptatum!
+                </p>
+              <button color="primary" (click)="btnClick()" mat-flat-button>Click Me</button>
+
+            </div>
+          </div>
+        </div>
+
+          <div class="col-12 my-2">
+            <!-- <div class="search-input">
+              <input type="text" class="form-control" placeholder="Search..." />
+              <i class="bi bi-search"></i>
+            </div> -->
+  
+            <div class="mb-5">
+                <h4 class="text-center">Communicate the data from ts file to html file</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mb-5">
+
+                        <input type="text" [value]="data" class="form-control mb-4">
+
+                        <input type="text" [disabled]="enable" [value]="enable? status1: status2" class="form-control mb-4">
+
+                        <input type="text" [hidden]="enable" bind-value="data" class="form-control mb-4">
+
+                    </div>
+                </div>
+            </div>
+          
+  
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

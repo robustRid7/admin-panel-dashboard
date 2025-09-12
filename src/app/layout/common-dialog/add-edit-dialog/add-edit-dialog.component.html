@@ -1,0 +1,107 @@
+<div class="dialog-wrapper" *ngIf="data.data == 1">
+  <div mat-dialog-title>
+    <span class="dialog-heading">Add new Vehicle Type</span>
+    <i mat-dialog-close class="bi bi-x-circle-fill"></i>
+  </div>
+  <mat-dialog-content>
+    <div class="row my-3">
+      <div class="col-lg-8 mx-auto">
+        <div class="mb-4 upload_image">
+          <label class="hoverable hoverable1" for="fileInput1">
+            <img [src]="url ? url : 'assets/images/bg-white.png'" />
+            <div class="hover-text mt-0 text-center d-block text-highlight">
+              <img src="assets/images/upload_document1.png" alt="upload" />
+              <p class="mb-0">Upload Icon</p>
+            </div>
+          </label>
+          <br />
+          <input id="fileInput1" type="file" (change)="onSelectFile($event)" />
+        </div>
+      </div>
+
+      <div class="col-l2">
+        <div class="custom-form-input mb-4">
+          <label class="dialog-label mb-1"
+            >Vehicle Type Name(In English)
+          </label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter Vehicle Type Name" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-l2">
+        <div class="custom-form-input mb-4">
+          <label class="dialog-label mb-1">Vehicle Type Name(In French) </label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter Vehicle Type Name" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-l2">
+        <div class="custom-form-input mb-4">
+          <label class="dialog-label mb-1"
+            >Vehicle Type Name(In Kinyarwanda)
+          </label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter Vehicle Type Name" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mx-auto col-lg-6">
+        <div class="text-center">
+          <button class="w-100" mat-flat-button color="primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>
+
+<div class="dialog-wrapper" *ngIf="data.data == 2">
+  <div mat-dialog-title>
+    <span class="dialog-heading">Add new Package Type</span>
+    <i mat-dialog-close class="bi bi-x-circle-fill"></i>
+  </div>
+  <mat-dialog-content>
+    <div class="row my-3">
+      <div class="col-l2">
+        <div class="custom-form-input mb-4">
+          <label class="dialog-label mb-1"
+            >Package Type Name(In English)
+          </label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter Package Type Name" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-l2">
+        <div class="custom-form-input mb-4">
+          <label class="dialog-label mb-1">Package Type Name(In French) </label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter Package Type Name" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-l2">
+        <div class="custom-form-input mb-4">
+          <label class="dialog-label mb-1"
+            >Package Type Name(In Kinyarwanda)
+          </label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter Package Type Name" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mx-auto col-lg-6">
+        <div class="text-center">
+          <button class="w-100" mat-flat-button color="primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>
