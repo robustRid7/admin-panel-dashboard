@@ -32,16 +32,16 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getComapinList();
-     this.api.searchCountList({}).subscribe({
-    next: (res: any) => {
-      if (res?.data) {
-        this.signupCount = res.data.userCount ?? 0;
-        this.landingCount = res.data.landingPageCount ?? 0;
-        this.bonusCount = res.data.bonusPageCount ?? 0;
-      }
-    },
-    error: (err: any) => {}
-  });
+    this.api.searchCountList({}).subscribe({
+      next: (res: any) => {
+        if (res?.data) {
+          this.signupCount = res.data.userCount ?? 0;
+          this.landingCount = res.data.landingPageCount ?? 0;
+          this.bonusCount = res.data.bonusPageCount ?? 0;
+        }
+      },
+      error: (err: any) => { }
+    });
   }
 
   getComapinList() {
@@ -54,22 +54,28 @@ export class DashboardComponent implements OnInit {
 
   search() {
     const formValues = this.form.value;
-    const payload = {
-      campaignId: formValues.companyId,
-      from: formValues.from ? new Date(formValues.from).toISOString() : null,
-      to: formValues.to ? new Date(formValues.to).toISOString() : null
-    };
+    const payload: any = {};
+
+    if (formValues.companyId) {
+      payload.campaignId = formValues.companyId;
+    }
+    if (formValues.from) {
+      payload.from = new Date(formValues.from).toISOString();
+    }
+    if (formValues.to) {
+      payload.to = new Date(formValues.to).toISOString();
+    }
+
     this.api.searchCountList(payload).subscribe({
       next: (res: any) => {
-
         if (res?.data) {
           this.signupCount = res.data.userCount ?? 0;
           this.landingCount = res.data.landingPageCount ?? 0;
           this.bonusCount = res.data.bonusPageCount ?? 0;
         }
       },
-      error: (err: any) => {
-      }
+      error: (err: any) => { }
     });
   }
+
 }
