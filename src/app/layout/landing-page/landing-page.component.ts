@@ -26,7 +26,7 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent {
-  displayedColumns1: string[] = ["s_no", "name","bonusId", "french", "kinyarwanda"];
+  displayedColumns1: string[] = ["s_no", "name", "bonusId", "createdAt", "french", "kinyarwanda"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
   @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;
