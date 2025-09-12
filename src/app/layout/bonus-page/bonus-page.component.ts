@@ -28,7 +28,7 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./bonus-page.component.css']
 })
 export class BonusPageComponent {
-  displayedColumns1: string[] = ["s_no", "name", "french", "kinyarwanda"];
+  displayedColumns1: string[] = ["s_no", "name", "bonusId", "french", "kinyarwanda"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
 

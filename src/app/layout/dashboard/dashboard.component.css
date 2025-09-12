@@ -50,3 +50,28 @@
 .stat-card.bonus {
   background: linear-gradient(135deg, #ff9800, #e65100);
 }
+
+
+
+.charts-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+.chart-box {
+  flex: 1;
+  max-width: 48%;
+  height: 300px; /* chart ko visible banane ke liye */
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+

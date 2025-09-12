@@ -57,6 +57,10 @@ export class ApiService {
 
   searchCountList(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/dash-board/campaigns/count`, data);
+  }
+
+  getDashboardAnalytics(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/dash-board/campaigns/own/analytics`, data);
 
   }
 }
