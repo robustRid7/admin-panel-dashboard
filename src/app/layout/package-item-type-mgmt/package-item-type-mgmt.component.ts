@@ -29,7 +29,7 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./package-item-type-mgmt.component.css']
 })
 export class PackageItemTypeMgmtComponent implements OnInit {
-  displayedColumns1: string[] = ["s_no", "name", "french", "kinyarwanda", 'mobNo',"action"];
+  displayedColumns1: string[] = ["s_no", "name", "french", "kinyarwanda", 'mobNo',"domain"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
 

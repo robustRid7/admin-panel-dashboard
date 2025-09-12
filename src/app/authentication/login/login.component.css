@@ -1,3 +1,9 @@
 .wrapper{
     width: 100%;
 }
+
+.error-msg {
+  font-size: 12px;
+  color: red;
+  margin-top: 4px;
+}

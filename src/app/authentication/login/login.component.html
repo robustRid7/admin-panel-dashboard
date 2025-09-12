@@ -25,30 +25,36 @@
                 <mat-label class="d-block">User ID</mat-label>
                 <mat-form-field appearance="outline" class="w-100">
                   <input matInput placeholder="Enter User ID" formControlName="userId" />
-                  <mat-error *ngIf="f['userId'].errors?.['required']">
+                  <!-- <mat-error *ngIf="f['userId'].errors?.['required']">
                     UserId is required
-                  </mat-error>
+                  </mat-error> -->
+
                 </mat-form-field>
+                <div class="error-msg" *ngIf="f['userId'].errors?.['required'] && (f['userId'].touched || submitted)">
+                  UserId is required
+                </div>
               </div>
 
               <!-- Password -->
               <div class="custom-input mb-4">
                 <mat-label class="d-block">Password</mat-label>
                 <mat-form-field appearance="outline" class="w-100">
-                  <input
-                    placeholder="Enter Password"
-                    matInput
-                    formControlName="password"
-                    [type]="hide ? 'password' : 'text'"
-                  />
+                  <input placeholder="Enter Password" matInput formControlName="password"
+                    [type]="hide ? 'password' : 'text'" />
                   <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
                     <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
                   </button>
 
-                  <mat-error *ngIf="f['password'].errors?.['required']">
+                  <!-- <mat-error *ngIf="f['password'].errors?.['required']">
                     Password is required
-                  </mat-error>
+                  </mat-error> -->
                 </mat-form-field>
+                  <div
+                  class="error-msg"
+                  *ngIf="f['password'].errors?.['required'] && (f['password'].touched || submitted)"
+                >
+                  Password is required
+                </div>
               </div>
 
               <!-- Submit -->
@@ -60,9 +66,9 @@
             </form>
 
             <!-- Forgot Password -->
-            <div class="mt-3 text-center">
+            <!-- <div class="mt-3 text-center">
               <span class="small-txt cursor-pointer" routerLink="/forgot-password">Forgot Password ?</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

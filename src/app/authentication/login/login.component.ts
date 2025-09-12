@@ -14,6 +14,7 @@ export class LoginComponent {
   hide = true;
   loginForm: FormGroup;
   loading = false;
+submitted = false;
 
   constructor(private fb: FormBuilder,
     private api: ApiService,
@@ -42,6 +43,8 @@ export class LoginComponent {
 
 
   onSubmit() {
+        this.submitted = true;
+
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       this.showSnackBar('Please fill all required fields', 'error');
