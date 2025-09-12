@@ -17,6 +17,7 @@
 .search-btn {
   height: 56px;
   border-radius: 10px;
+  margin-bottom: 30px !important;
 }
 
 .stats-grid {
