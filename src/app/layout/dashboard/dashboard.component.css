@@ -53,11 +53,31 @@
 }
 
 .chart2-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
+  display: flex;
+  gap: 12px;               /* gap between boxes */
+  margin-top: 12px;        /* space below chart */
+  flex-wrap: wrap;          
+  justify-content: flex-end; 
 }
+
+.chart2-stats-grid .stat-card {
+  flex: 1 1 120px;         /* responsive width: min 120px, can grow */
+  max-width: 140px;
+  padding: 8px;
+  text-align: center;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  background-color: darkred!important; 
+  margin: 0;               /* remove extra margins */
+}
+
+.chart2-stats-grid .stat-card h2 {
+  font-size: 1.4rem;
+  margin: 0;
+  font-weight: bold;
+}
+
 
 /* .chart-box {
   height: 400px;
