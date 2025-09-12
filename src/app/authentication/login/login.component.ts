@@ -14,22 +14,22 @@ export class LoginComponent {
   hide = true;
   loginForm: FormGroup;
   loading = false;
-submitted = false;
+  submitted = false;
 
   constructor(private fb: FormBuilder,
     private api: ApiService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {
-  this.loginForm = this.fb.group({
-  userId: ['', Validators.required],
-  password: ['', Validators.required],
-});
+    this.loginForm = this.fb.group({
+      userId: ['', Validators.required],
+      password: ['', Validators.required],
+    });
   }
 
- get f() {
-  return this.loginForm.controls as { [key: string]: FormControl };
-}
+  get f() {
+    return this.loginForm.controls as { [key: string]: FormControl };
+  }
 
 
   showSnackBar(message: string, type: 'success' | 'error' = 'success') {
@@ -43,7 +43,7 @@ submitted = false;
 
 
   onSubmit() {
-        this.submitted = true;
+    this.submitted = true;
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -56,6 +56,7 @@ submitted = false;
     this.api.login(this.loginForm.value).subscribe({
       next: (res: any) => {
         this.loading = false;
+        this.api.setToken(res.token || 'dummy-token');
         this.showSnackBar('Login successful ✅', 'success');
         this.router.navigate(['/admin/dashboard']);
       },

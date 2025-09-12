@@ -1,1 +1,55 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+    <form [formGroup]="form">
+        <!-- Filters -->
+        <div class="filter-bar">
+            <mat-form-field appearance="outline" class="filter-item">
+                <mat-label>Select Company</mat-label>
+                <mat-select formControlName="companyId" [formGroup]="form">
+                    <mat-option *ngFor="let c of comapinList" [value]="c._id">
+                        {{ c.campaignId }}
+                    </mat-option> </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-item">
+                <mat-label>From Date</mat-label>
+                <input matInput [matDatepicker]="fromPicker" formControlName="from" [formGroup]="form">
+                <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-item">
+                <mat-label>To Date</mat-label>
+                <input matInput [matDatepicker]="toPicker" formControlName="to" [formGroup]="form">
+                <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" class="search-btn" (click)="search()">
+                <mat-icon>search</mat-icon> Search
+            </button>
+        </div>
+    </form>
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <mat-card class="stat-card signup" routerLink="/admin/package-item-type-mgmt">
+            <mat-card-title>Signup Users</mat-card-title>
+            <mat-card-content>
+                <h2>{{ signupCount }}</h2>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card landing" routerLink="/admin/landing-page">
+            <mat-card-title>Landing Count</mat-card-title>
+            <mat-card-content>
+                <h2>{{ landingCount }}</h2>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card bonus" routerLink="/admin/bonus-page">
+            <mat-card-title>Bonus Count</mat-card-title>
+            <mat-card-content>
+                <h2>{{ bonusCount }}</h2>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

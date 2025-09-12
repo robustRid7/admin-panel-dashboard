@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { ApiService } from '../service/api.service';
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +20,15 @@ export class LayoutComponent {
 
   constructor(public dialog: MatDialog,
     private breakpointObserver: BreakpointObserver,
-    private router: Router) { }
+    private router: Router,
+    private api:ApiService
+  ) { }
+  private TOKEN_KEY = 'token';
+
+  logout() {
+    localStorage.removeItem(this.TOKEN_KEY);
+    this.router.navigate(['/login']);
+  }
 
 
   ngOnInit(): void {

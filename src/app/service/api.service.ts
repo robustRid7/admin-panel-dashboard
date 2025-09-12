@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -7,11 +8,30 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ApiService {
+  private TOKEN_KEY = 'token';
   private baseUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,
+    private router: Router
   ) { }
+
+  setToken(token: string) {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken(); // agar token hai to logged in
+  }
+
+  logout() {
+    localStorage.removeItem(this.TOKEN_KEY);
+    this.router.navigate(['/login']);
+  }
 
   login(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/users/admin/login`, data);
@@ -31,4 +51,12 @@ export class ApiService {
 
   }
 
+  getDashBoardCompainList(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/dash-board/campaigns`, data);
+  }
+
+  searchCountList(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/dash-board/campaigns/count`, data);
+
+  }
 }

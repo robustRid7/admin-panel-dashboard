@@ -17,7 +17,7 @@ import { PropertyBindingComponent } from './property-binding/property-binding.co
 import { ClassStyleBindingComponent } from './class-style-binding/class-style-binding.component';
 import { EventBindingComponent } from './event-binding/event-binding.component';
 import { TemplateDrivenFormComponent } from './template-driven-form/template-driven-form.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { BonusPageComponent } from './bonus-page/bonus-page.component';
 
@@ -44,7 +44,8 @@ import { BonusPageComponent } from './bonus-page/bonus-page.component';
     LayoutRoutingModule,
     MaterialModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class LayoutModule { }

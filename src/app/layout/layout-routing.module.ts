@@ -12,13 +12,14 @@ import { EventBindingComponent } from './event-binding/event-binding.component';
 import { TemplateDrivenFormComponent } from './template-driven-form/template-driven-form.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { BonusPageComponent } from './bonus-page/bonus-page.component';
+import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '', component: LayoutComponent, children: [
       { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'package-item-type-mgmt', component: PackageItemTypeMgmtComponent },
+      { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuard] },
+      { path: 'package-item-type-mgmt', component: PackageItemTypeMgmtComponent ,canActivate: [AuthGuard]},
       { path: 'vehicle-mgmt', component: VehicleMgmtComponent },
       { path: 'fare-mgmt', component: FareMgmtComponent },
       { path: 'interpolation', component: InterpolationComponent },
@@ -26,8 +27,8 @@ const routes: Routes = [
       { path: 'class-style-binding', component: ClassStyleBindingComponent },
       { path: 'event-binding', component: EventBindingComponent },
       { path: 'template-driven-form', component: TemplateDrivenFormComponent },
-      { path: 'landing-page', component: LandingPageComponent },
-      { path: 'bonus-page', component: BonusPageComponent }
+      { path: 'landing-page', component: LandingPageComponent,canActivate: [AuthGuard] },
+      { path: 'bonus-page', component: BonusPageComponent,canActivate: [AuthGuard] }
 
 
 
