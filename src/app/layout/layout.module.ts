@@ -20,6 +20,7 @@ import { TemplateDrivenFormComponent } from './template-driven-form/template-dri
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { BonusPageComponent } from './bonus-page/bonus-page.component';
+import { DashboardGoogleComponent } from './dashboard-google/dashboard-google.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { BonusPageComponent } from './bonus-page/bonus-page.component';
     EventBindingComponent,
     TemplateDrivenFormComponent,
     LandingPageComponent,
-    BonusPageComponent
+    BonusPageComponent,
+    DashboardGoogleComponent
   ],
   imports: [
     CommonModule,
