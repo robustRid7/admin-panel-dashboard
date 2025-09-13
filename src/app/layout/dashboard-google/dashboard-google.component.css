@@ -52,32 +52,6 @@
   background: linear-gradient(135deg, #ff9800, #e65100);
 }
 
-.chart2-stats-grid {
-  display: flex;
-  gap: 12px;               /* gap between boxes */
-  margin-top: 12px;        /* space below chart */
-  flex-wrap: wrap;          
-  justify-content: flex-end; 
-}
-
-.chart2-stats-grid .stat-card {
-  flex: 1 1 120px;         /* responsive width: min 120px, can grow */
-  max-width: 140px;
-  padding: 8px;
-  text-align: center;
-  color: #fff;
-  border-radius: 10px;
-  font-size: 0.8rem;
-  /* background-color: darkred!important;  */
-  margin: 0;               /* remove extra margins */
-}
-
-.chart2-stats-grid .stat-card h2 {
-  font-size: 1.4rem;
-  margin: 0;
-  font-weight: bold;
-}
-
 
 /* .chart-box {
   height: 400px;
@@ -97,24 +71,8 @@
 .stat-card.engaged-sessions {
   background: linear-gradient(135deg, #9c27b0, #6a1b9a); /* purple */
 }
-
-
 .charts-container {
-  display: flex;
-  justify-content: space-between;
-  /* margin-top: 40px; */
-  gap: 20px;
-  padding: 20px;
-}
-
-.chart-box {
-  flex: 1;
-  /* max-width: 48%; */
-  height: 340px; /* chart ko visible banane ke liye */
-  background: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px 20px 0;
 }
 
 
