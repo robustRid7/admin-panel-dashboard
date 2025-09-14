@@ -182,10 +182,10 @@ export class DashboardComponent implements OnInit {
   signupCount = 0;
   landingCount = 0;
   bonusCount = 0;
-totalActiveUsers = 0;
-totalSessions = 0;
-totalScreenPageViews = 0;
-totalEngagedSessions = 0;
+  totalActiveUsers = 0;
+  totalSessions = 0;
+  totalScreenPageViews = 0;
+  totalEngagedSessions = 0;
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       companyId: [null],
@@ -199,7 +199,7 @@ totalEngagedSessions = 0;
     this.getComapinList();
     this.loadCounts({});
     this.loadAnalytics({});
-     this.loadAnalyticsForChart2({});
+    this.loadAnalyticsForChart2({});
   }
 
   // ngAfterViewInit() {
@@ -225,7 +225,7 @@ totalEngagedSessions = 0;
 
     this.loadCounts(payload);
     this.loadAnalytics(payload);
-     this.loadAnalyticsForChart2(payload);
+    this.loadAnalyticsForChart2(payload);
   }
 
   loadCounts(payload: any) {
@@ -240,56 +240,88 @@ totalEngagedSessions = 0;
     });
   }
 
-  loadAnalytics(payload: any) {
-    this.api.getDashboardAnalytics(payload).subscribe({
-      next: (res: any) => {
-        if (res?.data) {
-          const labels: string[] = res.data.users.map((u: any) => u.date);
+loadAnalytics(payload: any) {
+  this.api.getDashboardAnalytics(payload).subscribe({
+    next: (res: any) => {
+      if (res?.data) {
+        // 1. Collect all dates from all datasets
+        const allDates = [
+          ...res.data.users.map((u: any) => u.date),
+          ...res.data.landingPageUsers.map((u: any) => u.date),
+          ...res.data.bonusPageUsers.map((u: any) => u.date),
+        ];
 
-          const signupData = res.data.users.map((u: any) => u.count);
-          const landingData = res.data.landingPageUsers.map((u: any) => u.count);
-          const bonusData = res.data.bonusPageUsers.map((u: any) => u.count);
+        // Unique sorted dates
+        const labels = Array.from(new Set(allDates)).sort();
 
-          const datasets = [
-            {
-              label: 'Signup Users',
-              data: signupData,
-              borderColor: '#4caf50',
-              backgroundColor: '#4caf50',
-              fill: false,
-              tension: 0.4
-            },
-            {
-              label: 'Landing Page Users',
-              data: landingData,
-              borderColor: '#2196f3',
-              backgroundColor: '#2196f3',
-              fill: false,
-              tension: 0.4
-            },
-            {
-              label: 'Bonus Page Users',
-              data: bonusData,
-              borderColor: '#ff9800',
-              backgroundColor: '#ff9800',
-              fill: false,
-              tension: 0.4
+        // 2. Helper fn to get count by date
+        const mapData = (arr: any[]) =>
+          labels.map(date => {
+            const found = arr.find(d => d.date === date);
+            return found ? found.count : 0;
+          });
+
+        // 3. Build datasets
+        const signupData = mapData(res.data.users);
+        const landingData = mapData(res.data.landingPageUsers);
+        const bonusData = mapData(res.data.bonusPageUsers);
+
+        const datasets = [
+          {
+            label: 'Signup Users',
+            data: signupData,
+            borderColor: '#4caf50',
+            backgroundColor: '#4caf50',
+            fill: false,
+            tension: 0.4,
+          },
+          {
+            label: 'Landing Page Users',
+            data: landingData,
+            borderColor: '#2196f3',
+            backgroundColor: '#2196f3',
+            fill: false,
+            tension: 0.4,
+          },
+          {
+            label: 'Bonus Page Users',
+            data: bonusData,
+            borderColor: '#ff9800',
+            backgroundColor: '#ff9800',
+            fill: false,
+            tension: 0.4,
+          },
+        ];
+
+        // 4. Destroy old chart
+        if (this.chart1) this.chart1.destroy();
+
+        // 5. Create new chart
+        if (this.chartRef1?.nativeElement) {
+          this.chart1 = new Chart(this.chartRef1.nativeElement, {
+            type: 'line',
+            data: { labels, datasets },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                tooltip: { mode: 'index', intersect: false },
+                legend: { position: 'bottom' }
+              },
+              interaction: { mode: 'nearest', axis: 'x', intersect: false },
+              scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Count' }, beginAtZero: true }
+              }
             }
-          ];
-
-          if (this.chart1) this.chart1.destroy();
-          if (this.chartRef1?.nativeElement) {
-            this.chart1 = new Chart(this.chartRef1.nativeElement, {
-              type: 'line',
-              data: { labels, datasets },
-              options: { responsive: true, maintainAspectRatio: false }
-            });
-          }
+          });
         }
-      },
-      error: (err: any) => { }
-    });
-  }
+      }
+    },
+    error: (err: any) => { }
+  });
+}
+
 
   // renderStaticChart() {
   //   const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
@@ -330,75 +362,75 @@ totalEngagedSessions = 0;
   //   }
   // }
 
-loadAnalyticsForChart2(payload: any) {
-  this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
-    next: (res: any) => {
-      if (res?.data) {
-        const data = res.data;
+  loadAnalyticsForChart2(payload: any) {
+    this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
+      next: (res: any) => {
+        if (res?.data) {
+          const data = res.data;
 
-        // Set stats for top boxes
-        this.totalActiveUsers = data.totalActiveUsers ?? 0;
-        this.totalSessions = data.totalSessions ?? 0;
-        this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
-        this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
+          // Set stats for top boxes
+          this.totalActiveUsers = data.totalActiveUsers ?? 0;
+          this.totalSessions = data.totalSessions ?? 0;
+          this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
+          this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
 
-        // Prepare chart data
-        const graph = data.graphData;
-        const labels = graph.map((g: any) => g.date);
+          // Prepare chart data
+          const graph = data.graphData;
+          const labels = graph.map((g: any) => g.date);
 
-        const activeUsersData = graph.map((g: any) => g.activeUsers);
-        const sessionsData = graph.map((g: any) => g.sessions);
-        const pageViewsData = graph.map((g: any) => g.screenPageViews);
-        const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
+          const activeUsersData = graph.map((g: any) => g.activeUsers);
+          const sessionsData = graph.map((g: any) => g.sessions);
+          const pageViewsData = graph.map((g: any) => g.screenPageViews);
+          const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
 
-        const datasets = [
-          {
-            label: 'Active Users',
-            data: activeUsersData,
-            borderColor: '#4caf50',
-            backgroundColor: '#4caf50',
-            fill: false,
-            tension: 0.4
-          },
-          {
-            label: 'Sessions',
-            data: sessionsData,
-            borderColor: '#2196f3',
-            backgroundColor: '#2196f3',
-            fill: false,
-            tension: 0.4
-          },
-          {
-            label: 'Page Views',
-            data: pageViewsData,
-            borderColor: '#ff9800',
-            backgroundColor: '#ff9800',
-            fill: false,
-            tension: 0.4
-          },
-          {
-            label: 'Engaged Sessions',
-            data: engagedSessionsData,
-            borderColor: '#9c27b0',
-            backgroundColor: '#9c27b0',
-            fill: false,
-            tension: 0.4
+          const datasets = [
+            {
+              label: 'Active Users',
+              data: activeUsersData,
+              borderColor: '#4caf50',
+              backgroundColor: '#4caf50',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Sessions',
+              data: sessionsData,
+              borderColor: '#2196f3',
+              backgroundColor: '#2196f3',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Page Views',
+              data: pageViewsData,
+              borderColor: '#ff9800',
+              backgroundColor: '#ff9800',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Engaged Sessions',
+              data: engagedSessionsData,
+              borderColor: '#9c27b0',
+              backgroundColor: '#9c27b0',
+              fill: false,
+              tension: 0.4
+            }
+          ];
+
+          if (this.chart2) this.chart2.destroy();
+          if (this.chartRef2?.nativeElement) {
+            this.chart2 = new Chart(this.chartRef2.nativeElement, {
+              type: 'line',
+              data: { labels, datasets },
+              options: { responsive: true, maintainAspectRatio: false }
+            });
           }
-        ];
-
-        if (this.chart2) this.chart2.destroy();
-        if (this.chartRef2?.nativeElement) {
-          this.chart2 = new Chart(this.chartRef2.nativeElement, {
-            type: 'line',
-            data: { labels, datasets },
-            options: { responsive: true, maintainAspectRatio: false }
-          });
         }
-      }
-    },
-    error: (err: any) => {}
-  });
-}
+      },
+      error: (err: any) => { }
+    });
+  }
 
 
 

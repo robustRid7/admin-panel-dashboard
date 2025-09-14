@@ -57,6 +57,16 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="campaignName">
+            <th mat-header-cell *matHeaderCellDef style="white-space: nowrap;">
+              Compaign Name 
+
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element?.campaignId?.campaignName }}
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="bonusId">
             <th mat-header-cell *matHeaderCellDef>
               Bonus - Id <br />
