@@ -33,7 +33,7 @@ export class LandingPageComponent {
   form: FormGroup;
   totalRecords: number = 0;
   pageIndex: number = 0;
-  pageSize: number = 50;
+  pageSize: number = 200;
   comapinList: any[] = [];
   campaignCtrl = new FormControl('');
   filteredCampaigns!: Observable<any[]>;
@@ -158,7 +158,7 @@ export class LandingPageComponent {
     this.api.landingPageList(payload).subscribe({
       next: (res: any) => {
         this.dataSource1.data = res.users;
-        this.totalRecords = res.data.meta.totalItems;
+        this.totalRecords = res.pagination.total;
         // this.dataSource1 = new MatTableDataSource(res.users);
         // this.dataSource1.paginator = this.MatPaginator1;
       }
@@ -175,7 +175,7 @@ export class LandingPageComponent {
   }
 
 
-    onPageChange(event: any) {
+  onPageChange(event: any) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getSignUpUsers();
@@ -193,7 +193,7 @@ export class LandingPageComponent {
       next: (res: any) => {
         // this.dataSource1 = new MatTableDataSource(res.users);
         // this.dataSource1.paginator = this.MatPaginator1;
-          this.dataSource1.data = res.users;
+        this.dataSource1.data = res.users;
         this.totalRecords = res.pagination.total;
       }
     });

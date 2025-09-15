@@ -32,6 +32,9 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./package-item-type-mgmt.component.css']
 })
 export class PackageItemTypeMgmtComponent implements OnInit {
+  totalRecords: number = 0;
+  pageIndex: number = 0;
+  pageSize: number = 100;
   form: FormGroup;
   comapinList: any[] = [];
   campaignCtrl = new FormControl('');
@@ -133,12 +136,25 @@ export class PackageItemTypeMgmtComponent implements OnInit {
 
 
   getSignUpUsers() {
-    this.api.signUpUser({}).subscribe({
+    const payload = {
+      limit: this.pageSize,
+      page: this.pageIndex + 1,
+      filters: {} as any
+    }
+    this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1 = new MatTableDataSource(res.users);
-        this.dataSource1.paginator = this.MatPaginator1;
+        // this.dataSource1 = new MatTableDataSource(res.users);
+        // this.dataSource1.paginator = this.MatPaginator1;
+        this.dataSource1.data = res.users;
+        this.totalRecords = res.pagination.total;
       }
     })
+  }
+
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getSignUpUsers();
   }
 
   applyFilter(event: Event) {
@@ -160,8 +176,10 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     const payload = { filters };
     this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1 = new MatTableDataSource(res.users);
-        this.dataSource1.paginator = this.MatPaginator1;
+        // this.dataSource1 = new MatTableDataSource(res.users);
+        // this.dataSource1.paginator = this.MatPaginator1;
+        this.dataSource1.data = res.users;
+        this.totalRecords = res.pagination.total;
       }
     });
   }
