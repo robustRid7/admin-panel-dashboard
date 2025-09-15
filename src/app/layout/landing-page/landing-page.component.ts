@@ -8,6 +8,7 @@ import { DeleteDialogComponent } from '../common-dialog/delete-dialog/delete-dia
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
 export interface PeriodicElement1 {
   s_no: number;
   name: string;
@@ -30,17 +31,21 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
 })
 export class LandingPageComponent {
   form: FormGroup;
+  totalRecords: number = 0;
+  pageIndex: number = 0;
+  pageSize: number = 50;
   comapinList: any[] = [];
   campaignCtrl = new FormControl('');
   filteredCampaigns!: Observable<any[]>;
   displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "createdAt", "french", "kinyarwanda"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
-  @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;
-
+  // @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit() {
-    this.dataSource1.paginator = this.MatPaginator1;
+    // this.dataSource1.paginator = this.MatPaginator1;
 
   }
 
@@ -145,10 +150,17 @@ export class LandingPageComponent {
 
 
   getSignUpUsers() {
-    this.api.landingPageList({}).subscribe({
+    const payload = {
+      limit: this.pageSize,
+      page: this.pageIndex + 1,
+      filters: {} as any
+    }
+    this.api.landingPageList(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1 = new MatTableDataSource(res.users);
-        this.dataSource1.paginator = this.MatPaginator1;
+        this.dataSource1.data = res.users;
+        this.totalRecords = res.data.meta.totalItems;
+        // this.dataSource1 = new MatTableDataSource(res.users);
+        // this.dataSource1.paginator = this.MatPaginator1;
       }
     })
   }
@@ -163,19 +175,28 @@ export class LandingPageComponent {
   }
 
 
- search() {
-  const formValues = this.form.value;
-  const payload: any = {};
-  if (formValues.companyId) payload.campaignId = formValues.companyId;
-  if (formValues.from) payload.from = new Date(formValues.from).toISOString();
-  if (formValues.to) payload.to = new Date(formValues.to).toISOString();
+    onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getSignUpUsers();
+  }
 
-  this.api.landingPageList(payload).subscribe({
-    next: (res: any) => {
-      this.dataSource1 = new MatTableDataSource(res.users);
-      this.dataSource1.paginator = this.MatPaginator1;
-    }
-  });
-}
+
+  search() {
+    const formValues = this.form.value;
+    const filters: any = {};
+    if (formValues.companyId) filters.campaignId = formValues.companyId;
+    if (formValues.from) filters.from = new Date(formValues.from).toISOString();
+    if (formValues.to) filters.to = new Date(formValues.to).toISOString();
+    const payload = { filters };
+    this.api.landingPageList(payload).subscribe({
+      next: (res: any) => {
+        // this.dataSource1 = new MatTableDataSource(res.users);
+        // this.dataSource1.paginator = this.MatPaginator1;
+          this.dataSource1.data = res.users;
+        this.totalRecords = res.pagination.total;
+      }
+    });
+  }
 
 }

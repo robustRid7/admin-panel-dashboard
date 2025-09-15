@@ -151,7 +151,7 @@ export class BonusPageComponent {
 
  search() {
   const formValues = this.form.value;
-   const filters: any = {};
+   const filters: any = {};      
   if (formValues.companyId) filters.campaignId = formValues.companyId;
   if (formValues.from) filters.from = new Date(formValues.from).toISOString();
   if (formValues.to) filters.to = new Date(formValues.to).toISOString();
