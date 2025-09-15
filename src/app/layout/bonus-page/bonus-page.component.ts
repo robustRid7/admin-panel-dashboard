@@ -149,14 +149,21 @@ export class BonusPageComponent {
     }
   }
 
-  search() {
-    const formValues = this.form.value;
-    const payload: any = {};
+ search() {
+  const formValues = this.form.value;
+  const payload: any = {};
 
-    if (formValues.companyId) payload.campaignId = formValues.companyId;
-    if (formValues.from) payload.from = new Date(formValues.from).toISOString();
-    if (formValues.to) payload.to = new Date(formValues.to).toISOString();
-  }
+  if (formValues.companyId) payload.campaignId = formValues.companyId;
+  if (formValues.from) payload.from = new Date(formValues.from).toISOString();
+  if (formValues.to) payload.to = new Date(formValues.to).toISOString();
+  this.api.bonusPageList(payload).subscribe({
+    next: (res: any) => {
+      this.dataSource1 = new MatTableDataSource(res.users);
+      this.dataSource1.paginator = this.MatPaginator1;
+    }
+  });
+}
+
 
 
 }
