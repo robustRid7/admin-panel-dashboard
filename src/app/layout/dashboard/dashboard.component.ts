@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getComapinList();
-    this.loadCounts({});
+    //this.loadCounts({});
     this.loadAnalytics({});
     // this.loadAnalyticsForChart2({});
 
@@ -100,28 +100,31 @@ export class DashboardComponent implements OnInit {
     if (formValues.from) payload.from = new Date(formValues.from).toISOString();
     if (formValues.to) payload.to = new Date(formValues.to).toISOString();
 
-    this.loadCounts(payload);
+    //this.loadCounts(payload);
     this.loadAnalytics(payload);
     this.loadAnalyticsForChart2(payload);
   }
 
-  loadCounts(payload: any) {
-    this.api.searchCountList(payload).subscribe({
-      next: (res: any) => {
-        if (res?.data) {
-          this.signupCount = res.data.userCount ?? 0;
-          this.landingCount = res.data.landingPageCount ?? 0;
-          this.bonusCount = res.data.bonusPageCount ?? 0;
-        }
-      }
-    });
-  }
+  // loadCounts(payload: any) {
+  //   this.api.searchCountList(payload).subscribe({
+  //     next: (res: any) => {
+  //       if (res?.data) {
+  //         this.signupCount = res.data.userCount ?? 0;
+  //         this.landingCount = res.data.landingPageCount ?? 0;
+  //         this.bonusCount = res.data.bonusPageCount ?? 0;
+  //       }
+  //     }
+  //   });
+  // }
 
   loadAnalytics(payload: any) {
     this.api.getDashboardAnalytics(payload).subscribe({
       next: (res: any) => {
         if (res?.data) {
           // 1. Collect all dates from all datasets
+            this.signupCount = res?.data?.totals.userCount;
+            this.landingCount = res?.data?.totals.landingPageUserCount;
+            this.bonusCount = res?.data?.totals.bonusPageUserCount;
           const allDates = [
             ...res.data.users.map((u: any) => u.date),
             ...res.data.landingPageUsers.map((u: any) => u.date),
