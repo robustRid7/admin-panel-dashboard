@@ -21,6 +21,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { BonusPageComponent } from './bonus-page/bonus-page.component';
 import { DashboardGoogleComponent } from './dashboard-google/dashboard-google.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DashboardMetaComponent } from './dashboard-meta/dashboard-meta.component';  // ✅ Add this
 
 
 @NgModule({
@@ -39,7 +43,8 @@ import { DashboardGoogleComponent } from './dashboard-google/dashboard-google.co
     TemplateDrivenFormComponent,
     LandingPageComponent,
     BonusPageComponent,
-    DashboardGoogleComponent
+    DashboardGoogleComponent,
+    DashboardMetaComponent
   ],
   imports: [
     CommonModule,
@@ -47,7 +52,10 @@ import { DashboardGoogleComponent } from './dashboard-google/dashboard-google.co
     MaterialModule,
     SharedModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+     MatAutocompleteModule 
   ]
 })
 export class LayoutModule { }

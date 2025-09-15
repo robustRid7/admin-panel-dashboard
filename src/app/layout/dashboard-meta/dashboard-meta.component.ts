@@ -6,13 +6,12 @@ import { Chart, registerables } from 'chart.js';
 import { Observable } from 'rxjs';
 import { ApiService } from 'src/app/service/api.service';
 import { startWith, map } from 'rxjs/operators';
-
 @Component({
-  selector: 'app-dashboard-google',
-  templateUrl: './dashboard-google.component.html',
-  styleUrls: ['./dashboard-google.component.css']
+  selector: 'app-dashboard-meta',
+  templateUrl: './dashboard-meta.component.html',
+  styleUrls: ['./dashboard-meta.component.css']
 })
-export class DashboardGoogleComponent {
+export class DashboardMetaComponent {
 
   @ViewChild('chart2', { static: false }) chartRef2!: ElementRef<HTMLCanvasElement>;
 
@@ -21,11 +20,11 @@ export class DashboardGoogleComponent {
   chart1: any;
   chart2: any;
 
-  signupCount = 0;
-  landingCount = 0;
-  bonusCount = 0;
-  totalActiveUsers = 0;
-  totalSessions = 0;
+  impressions = 0;
+  clicks = 0;
+  reach = 0;
+  uniqueClicks = 0;
+
   totalScreenPageViews = 0;
   totalEngagedSessions = 0;
   campaignCtrl = new FormControl('');
@@ -41,24 +40,23 @@ export class DashboardGoogleComponent {
 
   ngOnInit(): void {
     this.getComapinList();
-    this.loadCounts({});
-    this.loadAnalyticsForChart2({});
+    this.loadAnalyticsForMeta({});
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterCampaigns(value || ''))
     );
   }
 
- private _filterCampaigns(value: string): any[] {
-  const filterValue = value.toLowerCase();
-  if (!filterValue) {
-    // agar kuch type nahi kiya -> full list dikhao
-    return this.comapinList;
+  private _filterCampaigns(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (!filterValue) {
+      // agar kuch type nahi kiya -> full list dikhao
+      return this.comapinList;
+    }
+    return this.comapinList.filter(c =>
+      c.campaignId.toLowerCase().includes(filterValue)
+    );
   }
-  return this.comapinList.filter(c =>
-    c.campaignId.toLowerCase().includes(filterValue)
-  );
-}
 
 
   selectCampaign(event: any) {
@@ -78,10 +76,10 @@ export class DashboardGoogleComponent {
     this.api.getDashBoardCompainList({}).subscribe({
       next: (res: any) => {
         this.comapinList = res.data;
-           this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-        startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
-        map(value => this._filterCampaigns(value || ''))
-      );
+        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+          map(value => this._filterCampaigns(value || ''))
+        );
       }
     });
   }
@@ -94,74 +92,70 @@ export class DashboardGoogleComponent {
     if (formValues.from) payload.from = new Date(formValues.from).toISOString();
     if (formValues.to) payload.to = new Date(formValues.to).toISOString();
 
-    this.loadCounts(payload);
-    this.loadAnalyticsForChart2(payload);
-  }
-
-  loadCounts(payload: any) {
-    this.api.searchCountList(payload).subscribe({
-      next: (res: any) => {
-        if (res?.data) {
-          this.signupCount = res.data.userCount ?? 0;
-          this.landingCount = res.data.landingPageCount ?? 0;
-          this.bonusCount = res.data.bonusPageCount ?? 0;
-        }
-      }
-    });
+    this.loadAnalyticsForMeta(payload);
   }
 
 
-  loadAnalyticsForChart2(payload: any) {
-    this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
+  loadAnalyticsForMeta(payload: any) {
+    this.api.getDashboardMetaAnalytics(payload).subscribe({
       next: (res: any) => {
         if (res?.data) {
           const data = res.data;
 
-          // Set stats for top boxes
-          this.totalActiveUsers = data.totalActiveUsers ?? 0;
-          this.totalSessions = data.totalSessions ?? 0;
-          this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
-          this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
+          // ✅ Stats for top boxes
+          this.impressions = data.totals?.impressions ?? 0;
+          this.clicks = data.totals?.clicks ?? 0;
+          this.reach = data.totals?.reach ?? 0;
+          this.uniqueClicks = data.totals?.unique_clicks ?? 0;
 
-          // Prepare chart data
-          const graph = data.graphData;
-          const labels = graph.map((g: any) => g.date);
+          // ✅ Prepare chart data
+          const graph = data.data; // 👈 array use karna hai
+          const labels = graph.map((g: any) => g.date_start);
 
-          const activeUsersData = graph.map((g: any) => g.activeUsers);
-          const sessionsData = graph.map((g: any) => g.sessions);
-          const pageViewsData = graph.map((g: any) => g.screenPageViews);
-          const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
+          const impressionsData = graph.map((g: any) => g.impressions);
+          const clicksData = graph.map((g: any) => g.clicks);
+          const spendData = graph.map((g: any) => g.spend);
+          const uniqueClicksData = graph.map((g: any) => g.unique_clicks);
+          const reachData = graph.map((g: any) => g.reach);
 
           const datasets = [
             {
-              label: 'Active Users',
-              data: activeUsersData,
+              label: 'Impressions',
+              data: impressionsData,
               borderColor: '#4caf50',
               backgroundColor: '#4caf50',
               fill: false,
               tension: 0.4
             },
             {
-              label: 'Sessions',
-              data: sessionsData,
+              label: 'Clicks',
+              data: clicksData,
               borderColor: '#2196f3',
               backgroundColor: '#2196f3',
               fill: false,
               tension: 0.4
             },
             {
-              label: 'Page Views',
-              data: pageViewsData,
+              label: 'Spend',
+              data: spendData,
               borderColor: '#ff9800',
               backgroundColor: '#ff9800',
               fill: false,
               tension: 0.4
             },
             {
-              label: 'Engaged Sessions',
-              data: engagedSessionsData,
+              label: 'Unique Clicks',
+              data: uniqueClicksData,
               borderColor: '#9c27b0',
               backgroundColor: '#9c27b0',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Reach',
+              data: reachData,
+              borderColor: '#e91e63',
+              backgroundColor: '#e91e63',
               fill: false,
               tension: 0.4
             }
@@ -176,8 +170,7 @@ export class DashboardGoogleComponent {
             });
           }
         }
-      },
-      error: (err: any) => { }
+      }
     });
   }
 

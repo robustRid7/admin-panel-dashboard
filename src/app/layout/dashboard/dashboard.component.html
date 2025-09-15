@@ -2,13 +2,25 @@
     <form [formGroup]="form">
         <!-- Filters -->
         <div class="filter-bar">
-            <mat-form-field appearance="outline" class="filter-item">
+            <!-- <mat-form-field appearance="outline" class="filter-item">
                 <mat-label>Select compaign</mat-label>
                 <mat-select formControlName="companyId" [formGroup]="form">
                     <mat-option *ngFor="let c of comapinList" [value]="c._id">
                         {{ c.campaignId }}
                     </mat-option> </mat-select>
+            </mat-form-field> -->
+            <mat-form-field appearance="outline" class="filter-item">
+                <mat-label>Select campaign</mat-label>
+                <input type="text" matInput placeholder="Search campaign" [formControl]="campaignCtrl"
+                    [matAutocomplete]="auto">
+
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectCampaign($event)">
+                    <mat-option *ngFor="let c of filteredCampaigns | async" [value]="c.campaignId">
+                        {{ c.campaignId }}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
+
 
             <mat-form-field appearance="outline" class="filter-item">
                 <mat-label>From Date</mat-label>
@@ -56,11 +68,6 @@
 
 
 <div class="charts-container">
-  <div class="chart-box">
-    <canvas #chart1 height="340"></canvas>
-  </div>
-
-
-
-
-
+    <div class="chart-box">
+        <canvas #chart1 height="340"></canvas>
+    </div>

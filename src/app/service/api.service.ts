@@ -66,4 +66,8 @@ export class ApiService {
   getDashboardThirdPartyAnalytics(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/dash-board/campaigns/third-party/analytics`, data);
   }
+
+  getDashboardMetaAnalytics(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/dash-board/campaigns/meta/analytics`, data);
+  }
 }
