@@ -49,16 +49,16 @@ export class DashboardGoogleComponent {
     );
   }
 
- private _filterCampaigns(value: string): any[] {
-  const filterValue = value.toLowerCase();
-  if (!filterValue) {
-    // agar kuch type nahi kiya -> full list dikhao
-    return this.comapinList;
+  private _filterCampaigns(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (!filterValue) {
+      // agar kuch type nahi kiya -> full list dikhao
+      return this.comapinList;
+    }
+    return this.comapinList.filter(c =>
+      c.campaignId.toLowerCase().includes(filterValue)
+    );
   }
-  return this.comapinList.filter(c =>
-    c.campaignId.toLowerCase().includes(filterValue)
-  );
-}
 
 
   selectCampaign(event: any) {
@@ -75,13 +75,13 @@ export class DashboardGoogleComponent {
   // }
 
   getComapinList() {
-    this.api.getDashBoardCompainList({}).subscribe({
+    this.api.getDashBoardCompainList({ medium: "google" }).subscribe({
       next: (res: any) => {
         this.comapinList = res.data;
-           this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-        startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
-        map(value => this._filterCampaigns(value || ''))
-      );
+        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+          map(value => this._filterCampaigns(value || ''))
+        );
       }
     });
   }

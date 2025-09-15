@@ -1,6 +1,25 @@
 /* S.No column chhota */
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; 
+  align-items: center;
+  margin-bottom: 20px; 
+}
+
+.filter-item {
+  min-width: 220px; 
+  flex: 1; 
+}
+
+.search-btn {
+  height: 56px;
+  margin-top: -19px;
+}
+
 .mat-column-s_no {
-  flex: 0 0 60px;   /* fixed width */
+  flex: 0 0 60px;   
   max-width: 60px;
   text-align: center;
 }

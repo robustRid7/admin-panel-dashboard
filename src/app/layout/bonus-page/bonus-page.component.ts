@@ -5,7 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'src/app/service/api.service';
 import { AddEditDialogComponent } from '../common-dialog/add-edit-dialog/add-edit-dialog.component';
 import { DeleteDialogComponent } from '../common-dialog/delete-dialog/delete-dialog.component';
-
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 export interface PeriodicElement1 {
   s_no: number;
   name: string;
@@ -28,7 +30,11 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./bonus-page.component.css']
 })
 export class BonusPageComponent {
-  displayedColumns1: string[] = ["s_no", "name","campaignName", "bonusId", "createdAt", "french", "kinyarwanda"];
+  form: FormGroup;
+  comapinList: any[] = [];
+  campaignCtrl = new FormControl('');
+  filteredCampaigns!: Observable<any[]>;
+  displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "createdAt", "french", "kinyarwanda"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
 
@@ -42,32 +48,54 @@ export class BonusPageComponent {
   }
 
   constructor(public dialog: MatDialog,
-    private api: ApiService
+    private api: ApiService,
+    private fb: FormBuilder,
   ) {
+    this.form = this.fb.group({
+      companyId: [null],
+      from: [null],
+      to: [null]
+    });
 
   }
   ngOnInit(): void {
+    this.getComapinList();
+
     this.getSignUpUsers()
+
+    this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterCampaigns(value || ''))
+    );
   }
 
-  // viewDialog(
-  //   type: any,
-  //   enterAnimationDuration: string,
-  //   exitAnimationDuration: string
-  // ) {
-  //   this.dialog.open(ViewDialogComponent, {
-  //     width: "400px",
-  //     height: "auto",
-  //     maxHeight: "100vh",
-  //     maxWidth: "90vw",
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //     panelClass: "layout-dialog",
-  //     data: {
-  //       type:type,
-  //     },
-  //   });
-  // }
+  private _filterCampaigns(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (!filterValue) {
+      // agar kuch type nahi kiya -> full list dikhao
+      return this.comapinList;
+    }
+    return this.comapinList.filter(c =>
+      c.campaignId.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getComapinList() {
+    this.api.getDashBoardCompainList({}).subscribe({
+      next: (res: any) => {
+        this.comapinList = res.data || [];
+        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+          map(value => this._filterCampaigns(value || ''))
+        );
+      }
+    });
+  }
+
+  selectCampaign(event: any) {
+    const selected = this.comapinList.find(c => c.campaignId === event.option.value);
+    this.form.patchValue({ companyId: selected?._id });
+  }
 
   deleteDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
     this.dialog.open(DeleteDialogComponent, {
@@ -119,6 +147,15 @@ export class BonusPageComponent {
     if (this.dataSource1.paginator) {
       this.dataSource1.paginator.firstPage();
     }
+  }
+
+  search() {
+    const formValues = this.form.value;
+    const payload: any = {};
+
+    if (formValues.companyId) payload.campaignId = formValues.companyId;
+    if (formValues.from) payload.from = new Date(formValues.from).toISOString();
+    if (formValues.to) payload.to = new Date(formValues.to).toISOString();
   }
 
 

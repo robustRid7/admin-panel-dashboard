@@ -28,3 +28,21 @@
   flex: 0 0 200px;
   max-width: 200px;
 }
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; 
+  align-items: center;
+  margin-bottom: 20px; 
+}
+
+.filter-item {
+  min-width: 220px; 
+  flex: 1; 
+}
+
+.search-btn {
+  height: 56px;
+  margin-top: -19px;
+}

@@ -2,13 +2,6 @@
     <form [formGroup]="form">
         <!-- Filters -->
         <div class="filter-bar">
-            <!-- <mat-form-field appearance="outline" class="filter-item">
-                <mat-label>Select compaign</mat-label>
-                <mat-select formControlName="companyId" [formGroup]="form">
-                    <mat-option *ngFor="let c of comapinList" [value]="c._id">
-                        {{ c.campaignId }}
-                    </mat-option> </mat-select>
-            </mat-form-field> -->
             <mat-form-field appearance="outline" class="filter-item">
                 <mat-label>Select campaign</mat-label>
                 <input type="text" matInput placeholder="Search campaign" [formControl]="campaignCtrl"

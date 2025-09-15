@@ -73,7 +73,7 @@ export class DashboardMetaComponent {
   // }
 
   getComapinList() {
-    this.api.getDashBoardCompainList({}).subscribe({
+    this.api.getDashBoardCompainList({ medium: "meta" }).subscribe({
       next: (res: any) => {
         this.comapinList = res.data;
         this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(

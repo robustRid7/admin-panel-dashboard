@@ -5,6 +5,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { DeleteDialogComponent } from "../common-dialog/delete-dialog/delete-dialog.component";
 import { AddEditDialogComponent } from "../common-dialog/add-edit-dialog/add-edit-dialog.component";
 import { ApiService } from "src/app/service/api.service";
+import { FormGroup, FormControl, FormBuilder } from "@angular/forms";
+import { Observable } from "rxjs";
+import { startWith, map } from 'rxjs/operators';
 // import { ViewDialogComponent } from "../common-dialog/view-dialog/view-dialog.component";
 
 export interface PeriodicElement1 {
@@ -29,6 +32,10 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./package-item-type-mgmt.component.css']
 })
 export class PackageItemTypeMgmtComponent implements OnInit {
+  form: FormGroup;
+  comapinList: any[] = [];
+  campaignCtrl = new FormControl('');
+  filteredCampaigns!: Observable<any[]>;
   displayedColumns1: string[] = ["s_no", "domain", "companinid", "campaignName", "bonusId", "medium", "name", "french", "kinyarwanda", 'mobNo', "createdAt"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
@@ -43,32 +50,24 @@ export class PackageItemTypeMgmtComponent implements OnInit {
   }
 
   constructor(public dialog: MatDialog,
-    private api: ApiService
+    private api: ApiService,
+    private fb: FormBuilder,
   ) {
-
+    this.form = this.fb.group({
+      companyId: [null],
+      from: [null],
+      to: [null]
+    });
   }
   ngOnInit(): void {
+    this.getComapinList();
     this.getSignUpUsers()
+    this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterCampaigns(value || ''))
+    );
   }
 
-  // viewDialog(
-  //   type: any,
-  //   enterAnimationDuration: string,
-  //   exitAnimationDuration: string
-  // ) {
-  //   this.dialog.open(ViewDialogComponent, {
-  //     width: "400px",
-  //     height: "auto",
-  //     maxHeight: "100vh",
-  //     maxWidth: "90vw",
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //     panelClass: "layout-dialog",
-  //     data: {
-  //       type:type,
-  //     },
-  //   });
-  // }
 
   deleteDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
     this.dialog.open(DeleteDialogComponent, {
@@ -103,6 +102,35 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     });
   }
 
+  private _filterCampaigns(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    if (!filterValue) {
+      // agar kuch type nahi kiya -> full list dikhao
+      return this.comapinList;
+    }
+    return this.comapinList.filter(c =>
+      c.campaignId.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getComapinList() {
+    this.api.getDashBoardCompainList({}).subscribe({
+      next: (res: any) => {
+        this.comapinList = res.data || [];
+        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+          map(value => this._filterCampaigns(value || ''))
+        );
+      }
+    });
+  }
+
+  selectCampaign(event: any) {
+    const selected = this.comapinList.find(c => c.campaignId === event.option.value);
+    this.form.patchValue({ companyId: selected?._id });
+  }
+
+
 
   getSignUpUsers() {
     this.api.signUpUser({}).subscribe({
@@ -120,6 +148,15 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     if (this.dataSource1.paginator) {
       this.dataSource1.paginator.firstPage();
     }
+  }
+
+  search() {
+    const formValues = this.form.value;
+    const payload: any = {};
+
+    if (formValues.companyId) payload.campaignId = formValues.companyId;
+    if (formValues.from) payload.from = new Date(formValues.from).toISOString();
+    if (formValues.to) payload.to = new Date(formValues.to).toISOString();
   }
 
 
