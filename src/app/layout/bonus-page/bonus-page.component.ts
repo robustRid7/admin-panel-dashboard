@@ -151,11 +151,11 @@ export class BonusPageComponent {
 
  search() {
   const formValues = this.form.value;
-  const payload: any = {};
-
-  if (formValues.companyId) payload.campaignId = formValues.companyId;
-  if (formValues.from) payload.from = new Date(formValues.from).toISOString();
-  if (formValues.to) payload.to = new Date(formValues.to).toISOString();
+   const filters: any = {};
+  if (formValues.companyId) filters.campaignId = formValues.companyId;
+  if (formValues.from) filters.from = new Date(formValues.from).toISOString();
+  if (formValues.to) filters.to = new Date(formValues.to).toISOString();
+   const payload = { filters };
   this.api.bonusPageList(payload).subscribe({
     next: (res: any) => {
       this.dataSource1 = new MatTableDataSource(res.users);
