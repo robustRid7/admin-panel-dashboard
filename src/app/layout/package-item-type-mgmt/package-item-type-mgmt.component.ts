@@ -173,7 +173,11 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     if (formValues.from) filters.from = new Date(formValues.from).toISOString();
     if (formValues.to) filters.to = new Date(formValues.to).toISOString();
 
-    const payload = { filters };
+    const payload = {
+      page: this.pageIndex + 1,
+      limit: this.pageSize,
+      filters: filters
+    }
     this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
         // this.dataSource1 = new MatTableDataSource(res.users);

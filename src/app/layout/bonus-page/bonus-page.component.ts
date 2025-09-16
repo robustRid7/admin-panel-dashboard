@@ -173,12 +173,16 @@ export class BonusPageComponent {
     if (formValues.companyId) filters.campaignId = formValues.companyId;
     if (formValues.from) filters.from = new Date(formValues.from).toISOString();
     if (formValues.to) filters.to = new Date(formValues.to).toISOString();
-    const payload = { filters };
+    const payload = {
+      page: this.pageIndex + 1,
+      limit: this.pageSize,
+      filters: filters
+    }
     this.api.bonusPageList(payload).subscribe({
       next: (res: any) => {
         // this.dataSource1 = new MatTableDataSource(res.users);
         // this.dataSource1.paginator = this.MatPaginator1;
-         this.dataSource1.data = res.users;
+        this.dataSource1.data = res.users;
         this.totalRecords = res.pagination.total;
       }
     });
