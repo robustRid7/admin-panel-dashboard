@@ -39,7 +39,7 @@ export class WhatsUpUsersComponent {
   comapinList: any[] = [];
   campaignCtrl = new FormControl('');
   filteredCampaigns!: Observable<any[]>;
-  displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "createdAt", "french", "kinyarwanda"];
+  displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId","whatsupno", "createdAt", "french", "kinyarwanda"];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
   // @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;

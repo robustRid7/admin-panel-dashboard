@@ -120,6 +120,16 @@
                         </td>
                     </ng-container>
 
+                        <ng-container matColumnDef="whatsupno">
+                        <th mat-header-cell *matHeaderCellDef>
+                           Whatsup No <br />
+
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element?.whatsAppNumber}}
+                        </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="createdAt">
                         <th mat-header-cell *matHeaderCellDef>
                             Created At <br />
