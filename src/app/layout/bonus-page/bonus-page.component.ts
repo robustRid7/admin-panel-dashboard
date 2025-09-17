@@ -8,6 +8,7 @@ import { DeleteDialogComponent } from '../common-dialog/delete-dialog/delete-dia
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { FilterServiceService } from 'src/app/service/filter-service.service';
 export interface PeriodicElement1 {
   s_no: number;
   name: string;
@@ -53,6 +54,7 @@ export class BonusPageComponent {
   constructor(public dialog: MatDialog,
     private api: ApiService,
     private fb: FormBuilder,
+    private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
       companyId: [null],
@@ -63,7 +65,6 @@ export class BonusPageComponent {
   }
   ngOnInit(): void {
     this.getComapinList();
-
     this.getSignUpUsers()
 
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
@@ -87,8 +88,28 @@ export class BonusPageComponent {
     this.api.getDashBoardCompainList({}).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
+        const savedFilters = this.filterService.getCurrentFilters();
+
+        if (savedFilters) {
+          this.form.patchValue({
+            from: savedFilters.from ? new Date(savedFilters.from) : null,
+            to: savedFilters.to ? new Date(savedFilters.to) : null,
+            // companyId: savedFilters.companyId || null
+          });
+        }
+
+        const selected = this.comapinList.find(
+          c => (c._id) == (savedFilters.campaignId)
+        );
+
+        if (selected) {
+          this.form.patchValue({ companyId: selected._id });
+          this.campaignCtrl.setValue(selected.campaignId, { emitEvent: false });
+
+        }
+
         this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+          startWith(''),
           map(value => this._filterCampaigns(value || ''))
         );
       }

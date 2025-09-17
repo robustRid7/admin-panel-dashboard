@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { Chart, registerables } from 'chart.js';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { FilterServiceService } from 'src/app/service/filter-service.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,10 @@ export class DashboardComponent implements OnInit {
   totalSessions = 0;
   totalScreenPageViews = 0;
   totalEngagedSessions = 0;
-  constructor(private fb: FormBuilder, private api: ApiService) {
+  constructor(private fb: FormBuilder, 
+    private api: ApiService,
+    private filterService:FilterServiceService
+  ) {
     this.form = this.fb.group({
       companyId: [null],
       from: [null],
@@ -99,6 +103,8 @@ export class DashboardComponent implements OnInit {
     if (formValues.companyId) payload.campaignId = formValues.companyId;
     if (formValues.from) payload.from = new Date(formValues.from).toISOString();
     if (formValues.to) payload.to = new Date(formValues.to).toISOString();
+
+      this.filterService.setFilters(payload);
 
     //this.loadCounts(payload);
     this.loadAnalytics(payload);

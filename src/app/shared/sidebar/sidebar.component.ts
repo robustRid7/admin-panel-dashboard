@@ -1,10 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+
+  queryParams = { companyId: null, from: null, to: null };
+  ngOnInit(): void {
+   console.log(this.queryParams,"sjnssjjn");
+   
+  }
 
 }
