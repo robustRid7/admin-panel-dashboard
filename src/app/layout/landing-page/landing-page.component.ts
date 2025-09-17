@@ -9,6 +9,8 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
+import { FilterServiceService } from 'src/app/service/filter-service.service';
+import { combineLatest } from 'rxjs';
 export interface PeriodicElement1 {
   s_no: number;
   name: string;
@@ -46,12 +48,12 @@ export class LandingPageComponent {
 
   ngAfterViewInit() {
     // this.dataSource1.paginator = this.MatPaginator1;
-
   }
 
   constructor(public dialog: MatDialog,
     private api: ApiService,
     private fb: FormBuilder,
+    private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
       companyId: [null],
@@ -59,14 +61,17 @@ export class LandingPageComponent {
       to: [null]
     });
   }
+
   ngOnInit(): void {
     this.getComapinList();
-    this.getSignUpUsers()
+    this.getSignUpUsers();
+
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterCampaigns(value || ''))
     );
   }
+
 
   private _filterCampaigns(value: string): any[] {
     const filterValue = value.toLowerCase();
@@ -83,8 +88,28 @@ export class LandingPageComponent {
     this.api.getDashBoardCompainList({}).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
+        const savedFilters = this.filterService.getCurrentFilters();
+
+        if (savedFilters) {
+          this.form.patchValue({
+            from: savedFilters.from ? new Date(savedFilters.from) : null,
+            to: savedFilters.to ? new Date(savedFilters.to) : null,
+            // companyId: savedFilters.companyId || null
+          });
+        }
+
+        const selected = this.comapinList.find(
+          c => (c._id) == (savedFilters.campaignId)
+        );
+
+        if (selected) {
+          this.form.patchValue({ companyId: selected._id });
+          this.campaignCtrl.setValue(selected.campaignId, { emitEvent: false });
+
+        }
+
         this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+          startWith(''),
           map(value => this._filterCampaigns(value || ''))
         );
       }
@@ -96,24 +121,6 @@ export class LandingPageComponent {
     this.form.patchValue({ companyId: selected?._id });
   }
 
-  // viewDialog(
-  //   type: any,
-  //   enterAnimationDuration: string,
-  //   exitAnimationDuration: string
-  // ) {
-  //   this.dialog.open(ViewDialogComponent, {
-  //     width: "400px",
-  //     height: "auto",
-  //     maxHeight: "100vh",
-  //     maxWidth: "90vw",
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //     panelClass: "layout-dialog",
-  //     data: {
-  //       type:type,
-  //     },
-  //   });
-  // }
 
   deleteDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
     this.dialog.open(DeleteDialogComponent, {

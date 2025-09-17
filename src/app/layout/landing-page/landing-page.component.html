@@ -67,7 +67,7 @@
                             <!-- {{
                             MatPaginator1.pageIndex * MatPaginator1.pageSize + (i + 1)
                             }} -->
-                              {{ i + 1 + (pageIndex * pageSize) }}
+                            {{ i + 1 + (pageIndex * pageSize) }}
                         </td>
                     </ng-container>
 
@@ -167,11 +167,11 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
                 </table>
             </div>
-<!-- 
+            <!-- 
             <mat-paginator #MatPaginator1 [pageSizeOptions]="[50, 100, 150]" showFirstLastButtons
                 aria-label="Select page of periodic elements">
             </mat-paginator> -->
-                 <mat-paginator class="paginator" [length]="totalRecords" [pageSize]="pageSize" (page)="onPageChange($event)"
+            <mat-paginator class="paginator" [length]="totalRecords" [pageSize]="pageSize" (page)="onPageChange($event)"
                 [pageSizeOptions]="[200, 500, 1000]" showFirstLastButtons></mat-paginator>
         </div>
     </div>
