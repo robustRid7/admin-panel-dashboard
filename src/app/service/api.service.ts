@@ -48,7 +48,6 @@ export class ApiService {
 
   bonusPageList(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/bonus-page-users/fetch`, data);
-
   }
 
   getDashBoardCompainList(data: any): Observable<any> {
@@ -69,5 +68,9 @@ export class ApiService {
 
   getDashboardMetaAnalytics(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/dash-board/campaigns/meta/analytics`, data);
+  }
+
+  getWhatsUpUserList(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/whatsapp/fetch`, data);
   }
 }

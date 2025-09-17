@@ -43,12 +43,7 @@
     </form>
     <!-- Stats Cards -->
     <div class="stats-grid">
-        <mat-card class="stat-card signup" routerLink="/admin/package-item-type-mgmt">
-            <mat-card-title>Signup Users</mat-card-title>
-            <mat-card-content>
-                <h2>{{ signupCount }}</h2>
-            </mat-card-content>
-        </mat-card>
+
 
         <mat-card class="stat-card landing" routerLink="/admin/landing-page">
             <mat-card-title>LandingPage Users</mat-card-title>
@@ -61,6 +56,27 @@
             <mat-card-title>BonusPage Users</mat-card-title>
             <mat-card-content>
                 <h2>{{ bonusCount }}</h2>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card whatsup" routerLink="/admin/whats-up-users">
+            <mat-card-title> What'sUp Users</mat-card-title>
+            <mat-card-content>
+                <h2>{{ whatsupCount }}</h2>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card signup" routerLink="/admin/package-item-type-mgmt">
+            <mat-card-title>Signup Users</mat-card-title>
+            <mat-card-content>
+                <h2>{{ signupCount }}</h2>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card signup">
+            <mat-card-title>Users Deposit</mat-card-title>
+            <mat-card-content>
+                <h2>0</h2>
             </mat-card-content>
         </mat-card>
     </div>

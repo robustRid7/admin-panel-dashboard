@@ -1,0 +1,49 @@
+/* S.No column chhota */
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; 
+  align-items: center;
+  margin-bottom: 20px; 
+}
+
+.filter-item {
+  min-width: 220px; 
+  flex: 1; 
+}
+
+.search-btn {
+  height: 56px;
+  margin-top: -19px;
+}
+
+.mat-column-s_no {
+  flex: 0 0 60px;   
+  max-width: 60px;
+  text-align: center;
+}
+
+/* Campaign Id thoda fix */
+.mat-column-name {
+  flex: 0 0 180px;
+  max-width: 180px;
+}
+
+/* Campaign Name */
+.mat-column-campaignName {
+  flex: 1 1 auto; /* baaki space ye le sakta hai */
+  min-width: 200px;
+}
+
+/* Bonus Id */
+.mat-column-bonusId {
+  flex: 0 0 180px;
+  max-width: 180px;
+}
+
+/* Created At thoda bada */
+.mat-column-createdAt {
+  flex: 0 0 200px;
+  max-width: 200px;
+}

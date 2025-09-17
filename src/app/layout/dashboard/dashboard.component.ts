@@ -25,13 +25,14 @@ export class DashboardComponent implements OnInit {
   signupCount = 0;
   landingCount = 0;
   bonusCount = 0;
+  whatsupCount = 0;
   totalActiveUsers = 0;
   totalSessions = 0;
   totalScreenPageViews = 0;
   totalEngagedSessions = 0;
-  constructor(private fb: FormBuilder, 
+  constructor(private fb: FormBuilder,
     private api: ApiService,
-    private filterService:FilterServiceService
+    private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
       companyId: [null],
@@ -104,7 +105,7 @@ export class DashboardComponent implements OnInit {
     if (formValues.from) payload.from = new Date(formValues.from).toISOString();
     if (formValues.to) payload.to = new Date(formValues.to).toISOString();
 
-      this.filterService.setFilters(payload);
+    this.filterService.setFilters(payload);
 
     //this.loadCounts(payload);
     this.loadAnalytics(payload);
@@ -128,13 +129,15 @@ export class DashboardComponent implements OnInit {
       next: (res: any) => {
         if (res?.data) {
           // 1. Collect all dates from all datasets
-            this.signupCount = res?.data?.totals.userCount;
-            this.landingCount = res?.data?.totals.landingPageUserCount;
-            this.bonusCount = res?.data?.totals.bonusPageUserCount;
+          this.signupCount = res?.data?.totals.userCount;
+          this.landingCount = res?.data?.totals.landingPageUserCount;
+          this.bonusCount = res?.data?.totals.bonusPageUserCount;
+          this.whatsupCount = res?.data?.totals.whatsAppUserCount
           const allDates = [
             ...res.data.users.map((u: any) => u.date),
             ...res.data.landingPageUsers.map((u: any) => u.date),
             ...res.data.bonusPageUsers.map((u: any) => u.date),
+            ...res.data.whatsAppUsers.map((u: any) => u.date)
           ];
 
           // Unique sorted dates
@@ -151,6 +154,7 @@ export class DashboardComponent implements OnInit {
           const signupData = mapData(res.data.users);
           const landingData = mapData(res.data.landingPageUsers);
           const bonusData = mapData(res.data.bonusPageUsers);
+          const whatsupData = mapData(res.data.whatsAppUsers);
 
           const datasets = [
             {
@@ -174,6 +178,15 @@ export class DashboardComponent implements OnInit {
               data: bonusData,
               borderColor: '#ff9800',
               backgroundColor: '#ff9800',
+              fill: false,
+              tension: 0.4,
+            },
+
+            {
+              label: 'Whatsup Users',
+              data: whatsupData,
+              borderColor: '#6610f2',
+              backgroundColor: '#6610f2',
               fill: false,
               tension: 0.4,
             },

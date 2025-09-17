@@ -24,7 +24,8 @@ import { DashboardGoogleComponent } from './dashboard-google/dashboard-google.co
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { DashboardMetaComponent } from './dashboard-meta/dashboard-meta.component';  // ✅ Add this
+import { DashboardMetaComponent } from './dashboard-meta/dashboard-meta.component';
+import { WhatsUpUsersComponent } from './whats-up-users/whats-up-users.component';  // ✅ Add this
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { DashboardMetaComponent } from './dashboard-meta/dashboard-meta.componen
     LandingPageComponent,
     BonusPageComponent,
     DashboardGoogleComponent,
-    DashboardMetaComponent
+    DashboardMetaComponent,
+    WhatsUpUsersComponent
   ],
   imports: [
     CommonModule,
