@@ -16,6 +16,7 @@ export interface PeriodicElement1 {
   name: string;
   french: string;
   kinyarwanda: string;
+  LName: string;
 }
 
 const ELEMENT_DATA1: PeriodicElement1[] = [
@@ -24,6 +25,7 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
     name: "Lorem",
     french: "Lorem",
     kinyarwanda: "Lorem",
+    LName: "Lorem",
   },
 ];
 @Component({
@@ -39,7 +41,7 @@ export class LandingPageComponent {
   comapinList: any[] = [];
   campaignCtrl = new FormControl('');
   filteredCampaigns!: Observable<any[]>;
-  displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "createdAt", "french", "kinyarwanda"];
+  displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "french", "kinyarwanda", "LName", "createdAt",];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
 
   // @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;

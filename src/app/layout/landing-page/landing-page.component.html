@@ -120,6 +120,15 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="LName">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Landing Page Domain <br />
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element?.landingPageName }}
+                        </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="createdAt">
                         <th mat-header-cell *matHeaderCellDef>
                             Created At <br />
