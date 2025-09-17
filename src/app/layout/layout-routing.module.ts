@@ -15,6 +15,7 @@ import { BonusPageComponent } from './bonus-page/bonus-page.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { DashboardGoogleComponent } from './dashboard-google/dashboard-google.component';
 import { DashboardMetaComponent } from './dashboard-meta/dashboard-meta.component';
+import { WhatsUpUsersComponent } from './whats-up-users/whats-up-users.component';
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
       { path: 'event-binding', component: EventBindingComponent },
       { path: 'template-driven-form', component: TemplateDrivenFormComponent },
       { path: 'landing-page', component: LandingPageComponent, canActivate: [AuthGuard] },
-      { path: 'bonus-page', component: BonusPageComponent, canActivate: [AuthGuard] }
+      { path: 'bonus-page', component: BonusPageComponent, canActivate: [AuthGuard] },
+       { path: 'whats-up-users', component: WhatsUpUsersComponent, canActivate: [AuthGuard] }
 
 
 

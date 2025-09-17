@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div>Google Dashboard</div>
+    <div>Google Analytics</div>
   </a>
 
   <a routerLink="/admin/dashboard-meta" routerLinkActive="active" class="list-group-item list-group-item-action"
@@ -25,7 +25,7 @@
       <i class="bi bi-meta"></i>
     </div>
 
-    <div>Meta Dashboard</div>
+    <div>Meta Analytics</div>
   </a>
 
 
@@ -97,7 +97,8 @@
 </a> -->
 
 
-  <a routerLink="/admin/landing-page"   [queryParams]="queryParams" routerLinkActive="active" class="list-group-item list-group-item-action">
+  <a routerLink="/admin/landing-page" [queryParams]="queryParams" routerLinkActive="active"
+    class="list-group-item list-group-item-action">
     <div class="icon">
       <i class="bi bi-globe2"></i>
     </div>
@@ -111,6 +112,16 @@
     </div>
 
     <div>Bonus page</div>
+  </a>
+
+
+  <a routerLink="/admin/whats-up-users" [queryParams]="queryParams" routerLinkActive="active"
+    class="list-group-item list-group-item-action">
+    <div class="icon">
+      <i class="bi bi-whatsapp"></i>
+    </div>
+
+    <div>whatsup Users</div>
   </a>
 
   <a routerLink="/admin/package-item-type-mgmt" routerLinkActive="active"
