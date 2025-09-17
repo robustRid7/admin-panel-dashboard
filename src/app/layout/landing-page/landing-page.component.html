@@ -73,7 +73,7 @@
 
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef>
-                            Compaign - Id
+                            Campaign - Id
 
                         </th>
                         <td mat-cell *matCellDef="let element">
@@ -83,7 +83,7 @@
 
                     <ng-container matColumnDef="campaignName">
                         <th mat-header-cell *matHeaderCellDef style="white-space: nowrap;">
-                            Compaign Name
+                            Campaign Name
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element?.campaignId?.campaignName }}
@@ -167,7 +167,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
                 </table>
             </div>
-            <!-- 
+            <!--
             <mat-paginator #MatPaginator1 [pageSizeOptions]="[50, 100, 150]" showFirstLastButtons
                 aria-label="Select page of periodic elements">
             </mat-paginator> -->
