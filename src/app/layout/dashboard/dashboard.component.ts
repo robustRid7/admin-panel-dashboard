@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ApiService } from 'src/app/service/api.service';
 import { Chart, registerables } from 'chart.js';
@@ -30,6 +30,11 @@ export class DashboardComponent implements OnInit {
   totalSessions = 0;
   totalScreenPageViews = 0;
   totalEngagedSessions = 0;
+
+
+
+  filteredCampaignsList: any[] = [];
+  showDropdown: boolean = false;
   constructor(private fb: FormBuilder,
     private api: ApiService,
     private filterService: FilterServiceService
@@ -41,24 +46,23 @@ export class DashboardComponent implements OnInit {
     });
     Chart.register(...registerables);
   }
-
-  // ngOnInit(): void {
-  //   this.getComapinList();
-  //   this.loadCounts({});
-  //   this.loadAnalytics({});
-  //   this.loadAnalyticsForChart2({});
-  // }
-
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: any) {
+    const clickedInside = event.target.closest('.dp-down');
+    if (!clickedInside) {
+      this.showDropdown = false;
+    }
+  }
   ngOnInit(): void {
     this.getComapinList();
-    //this.loadCounts({});
     this.loadAnalytics({});
-    // this.loadAnalyticsForChart2({});
 
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterCampaigns(value || ''))
     );
+
+
   }
 
   private _filterCampaigns(value: string): any[] {
@@ -72,17 +76,11 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-
-
-  // ngAfterViewInit() {
-  //   // Chart2 static hamesha render karega
-  //   this.renderStaticChart();
-  // }
-
   getComapinList() {
     this.api.getDashBoardCompainList({}).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
+        this.filteredCampaignsList = [...this.comapinList];
         this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
           startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
           map(value => this._filterCampaigns(value || ''))
@@ -92,10 +90,10 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  selectCampaign(event: any) {
-    const selected = this.comapinList.find(c => c.campaignId === event.option.value);
-    this.form.patchValue({ companyId: selected?._id });
-  }
+  // selectCampaign(event: any) {
+  //   const selected = this.comapinList.find(c => c.campaignId === event.option.value);
+  //   this.form.patchValue({ companyId: selected?._id });
+  // }
 
   search() {
     const formValues = this.form.value;
@@ -112,17 +110,6 @@ export class DashboardComponent implements OnInit {
     this.loadAnalyticsForChart2(payload);
   }
 
-  // loadCounts(payload: any) {
-  //   this.api.searchCountList(payload).subscribe({
-  //     next: (res: any) => {
-  //       if (res?.data) {
-  //         this.signupCount = res.data.userCount ?? 0;
-  //         this.landingCount = res.data.landingPageCount ?? 0;
-  //         this.bonusCount = res.data.bonusPageCount ?? 0;
-  //       }
-  //     }
-  //   });
-  // }
 
   loadAnalytics(payload: any) {
     this.api.getDashboardAnalytics(payload).subscribe({
@@ -221,46 +208,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
-  // renderStaticChart() {
-  //   const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-  //   const datasets = [
-  //     {
-  //       label: 'Static Signup',
-  //       data: [10, 20, 15, 25, 30],
-  //       borderColor: '#4caf50',
-  //       backgroundColor: '#4caf50',
-  //       fill: false,
-  //       tension: 0.4
-  //     },
-  //     {
-  //       label: 'Static Landing',
-  //       data: [5, 10, 8, 12, 15],
-  //       borderColor: '#2196f3',
-  //       backgroundColor: '#2196f3',
-  //       fill: false,
-  //       tension: 0.4
-  //     },
-  //     {
-  //       label: 'Static Bonus',
-  //       data: [3, 7, 6, 9, 12],
-  //       borderColor: '#ff9800',
-  //       backgroundColor: '#ff9800',
-  //       fill: false,
-  //       tension: 0.4
-  //     }
-  //   ];
-
-  //   if (this.chart2) this.chart2.destroy();
-  //   if (this.chartRef2?.nativeElement) {
-  //     this.chart2 = new Chart(this.chartRef2.nativeElement, {
-  //       type: 'line',
-  //       data: { labels, datasets },
-  //       options: { responsive: true, maintainAspectRatio: false }
-  //     });
-  //   }
-  // }
-
   loadAnalyticsForChart2(payload: any) {
     this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
       next: (res: any) => {
@@ -333,5 +280,28 @@ export class DashboardComponent implements OnInit {
 
 
 
+
+  filterCampaigns() {
+    const value = this.campaignCtrl.value?.toLowerCase() || '';
+    if (!value) {
+      this.filteredCampaignsList = [...this.comapinList];
+    } else {
+      this.filteredCampaignsList = this.comapinList.filter(c =>
+        c.campaignId.toLowerCase().includes(value)
+      );
+    }
+  }
+
+  toggleDropdown() {
+    console.log("hii", this.showDropdown);
+
+    this.showDropdown = !this.showDropdown;
+  }
+
+  selectCampaign(campaign: any) {
+    this.campaignCtrl.setValue(campaign.campaignId);
+    this.form.patchValue({ companyId: campaign._id });
+    this.showDropdown = false;
+  }
 
 }

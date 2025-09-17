@@ -3,14 +3,14 @@
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; 
+  gap: 16px;
   align-items: center;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .filter-item {
-  min-width: 220px; 
-  flex: 1; 
+  min-width: 220px;
+  flex: 1;
 }
 
 .search-btn {
@@ -19,7 +19,7 @@
 }
 
 .mat-column-s_no {
-  flex: 0 0 60px;   
+  flex: 0 0 60px;
   max-width: 60px;
   text-align: center;
 }
@@ -46,4 +46,20 @@
 .mat-column-createdAt {
   flex: 0 0 200px;
   max-width: 200px;
+}
+table thead tr th,
+table tbody tr td{
+  white-space: nowrap;
+}
+.list-group-item-action{
+text-overflow: ellipsis;
+    max-width: 18rem;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 0;
+    padding: 20px;
+}
+.list-group {
+  background-color: #fff;
+  overflow-x: hidden;
 }

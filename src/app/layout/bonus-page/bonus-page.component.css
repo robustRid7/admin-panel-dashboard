@@ -32,17 +32,38 @@
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; 
+  gap: 16px;
   align-items: center;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .filter-item {
-  min-width: 220px; 
-  flex: 1; 
+  min-width: 220px;
+  flex: 1;
 }
 
 .search-btn {
   height: 56px;
   margin-top: -19px;
+}
+table thead tr th,
+table tbody tr td{
+  white-space: nowrap;
+}
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.list-group-item-action{
+text-overflow: ellipsis;
+    max-width: 18rem;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 0;
+    padding: 20px;
+}
+.list-group {
+  background-color: #fff;
+  overflow-x: hidden;
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -35,26 +35,28 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
 })
 export class LandingPageComponent {
   form: FormGroup;
-  totalRecords: number = 0;
-  pageIndex: number = 0;
-  pageSize: number = 200;
-  comapinList: any[] = [];
   campaignCtrl = new FormControl('');
-  filteredCampaigns!: Observable<any[]>;
   displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "french", "kinyarwanda", "LName", "createdAt",];
   dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
+  comapinList: any[] = [];
+  filteredCampaigns: any[] = [];
 
-  // @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  ngAfterViewInit() {
-    // this.dataSource1.paginator = this.MatPaginator1;
+  data: any[] = [];
+  pageIndex = 0;
+  pageSize = 10;
+  totalRecords = 0;
+  filteredCampaignsList: any[] = [];
+  showDropdown: boolean = false;
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: any) {
+    const clickedInside = event.target.closest('.dp-down');
+    if (!clickedInside) {
+      this.showDropdown = false;
+    }
   }
-
-  constructor(public dialog: MatDialog,
-    private api: ApiService,
+  constructor(
     private fb: FormBuilder,
+    private api: ApiService,
     private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
@@ -68,126 +70,48 @@ export class LandingPageComponent {
     this.getComapinList();
     this.getSignUpUsers();
 
-    this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCampaigns(value || ''))
-    );
   }
-
-
-  private _filterCampaigns(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    if (!filterValue) {
-      // agar kuch type nahi kiya -> full list dikhao
-      return this.comapinList;
-    }
-    return this.comapinList.filter(c =>
-      c.campaignId.toLowerCase().includes(filterValue)
-    );
-  }
-
   getComapinList() {
     this.api.getDashBoardCompainList({}).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
-        const savedFilters = this.filterService.getCurrentFilters();
-
-        if (savedFilters) {
-          this.form.patchValue({
-            from: savedFilters.from ? new Date(savedFilters.from) : null,
-            to: savedFilters.to ? new Date(savedFilters.to) : null,
-            // companyId: savedFilters.companyId || null
-          });
-        }
-
-        const selected = this.comapinList.find(
-          c => (c._id) == (savedFilters.campaignId)
-        );
-
-        if (selected) {
-          this.form.patchValue({ companyId: selected._id });
-          this.campaignCtrl.setValue(selected.campaignId, { emitEvent: false });
-
-        }
-
-        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filterCampaigns(value || ''))
-        );
+        this.filteredCampaignsList = [...this.comapinList];
       }
     });
   }
-
-  selectCampaign(event: any) {
-    const selected = this.comapinList.find(c => c.campaignId === event.option.value);
-    this.form.patchValue({ companyId: selected?._id });
+  filterCampaigns() {
+    const value = this.campaignCtrl.value?.toLowerCase() || '';
+    if (!value) {
+      this.filteredCampaignsList = [...this.comapinList];
+    } else {
+      this.filteredCampaignsList = this.comapinList.filter(c =>
+        c.campaignId.toLowerCase().includes(value)
+      );
+    }
   }
 
-
-  deleteDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
-    this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
-      maxWidth: "90vw",
-      panelClass: "dialog-layout",
-      disableClose: true,
-      enterAnimationDuration,
-      exitAnimationDuration,
-    })
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
   }
 
-
-  addDialog(
-    enterAnimationDuration: string,
-    exitAnimationDuration: string,
-    element: any
-
-  ): void {
-    const dialogRef = this.dialog.open(AddEditDialogComponent, {
-      width: "550px",
-      height: "auto",
-      maxHeight: "100vh",
-      maxWidth: "90vw",
-      panelClass: "layout-dialog",
-      enterAnimationDuration,
-      exitAnimationDuration,
-      data: {
-        data: element
-      }
-
-    });
+  selectCampaign(c: any) {
+    this.form.patchValue({ companyId: c._id });
+    this.campaignCtrl.setValue(c.campaignId, { emitEvent: false });
+    this.showDropdown = false;
   }
-
 
   getSignUpUsers() {
     const payload = {
       limit: this.pageSize,
       page: this.pageIndex + 1,
       filters: {} as any
-    }
+    };
     this.api.landingPageList(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1.data = res.users;
+        this.data = res.users;
         this.totalRecords = res.pagination.total;
-        // this.dataSource1 = new MatTableDataSource(res.users);
-        // this.dataSource1.paginator = this.MatPaginator1;
       }
-    })
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource1.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource1.paginator) {
-      this.dataSource1.paginator.firstPage();
-    }
-  }
-
-
-  onPageChange(event: any) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.getSignUpUsers();
+    });
   }
 
 
@@ -197,19 +121,44 @@ export class LandingPageComponent {
     if (formValues.companyId) filters.campaignId = formValues.companyId;
     if (formValues.from) filters.from = new Date(formValues.from).toISOString();
     if (formValues.to) filters.to = new Date(formValues.to).toISOString();
+
     const payload = {
       page: this.pageIndex + 1,
       limit: this.pageSize,
       filters: filters
-    }
+    };
     this.api.landingPageList(payload).subscribe({
       next: (res: any) => {
-        // this.dataSource1 = new MatTableDataSource(res.users);
-        // this.dataSource1.paginator = this.MatPaginator1;
-        this.dataSource1.data = res.users;
+        this.data = res.users;
         this.totalRecords = res.pagination.total;
       }
     });
   }
+resetFilters() {
+  this.form.reset();
+  this.campaignCtrl.setValue('');
+  this.form.patchValue({ companyId: null });
 
+  this.pageIndex = 0;
+
+  this.getSignUpUsers();
+}
+  totalPages() {
+    return Math.ceil(this.totalRecords / this.pageSize);
+  }
+
+  prevPage() {
+    if (this.pageIndex > 0) {
+      this.pageIndex--;
+      this.getSignUpUsers();
+    }
+  }
+
+  nextPage() {
+    if (this.pageIndex + 1 < this.totalPages()) {
+      this.pageIndex++;
+      this.getSignUpUsers();
+    }
+
+  }
 }

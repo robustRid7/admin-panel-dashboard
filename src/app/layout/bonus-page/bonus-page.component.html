@@ -1,176 +1,115 @@
 <div class="main-wrapper">
-    <div class="">
-        <div class="row align-items-center">
-            <div class="col-12">`
-                <div class="heading-row">
-                    <h3>Bonus Page</h3>
-                </div>
-            </div>
-        </div>
-        <div class="shadow-box mt-0">
-            <div class="row align-items-center">
-                <!-- <div class="col-md-6 col-lg-6 col-xl-5 col-xxl-4 my-2"> -->
-                <!-- <div class="search-input">
-                        <input type="text" class="form-control" placeholder="Search..." (keyup)="applyFilter($event)" />
-                        <i class="bi bi-search"></i>
-                    </div> -->
-                <form [formGroup]="form">
-                    <!-- Filters -->
-                    <div class="filter-bar">
-                        <mat-form-field appearance="outline" class="filter-item">
-                            <mat-label>Select campaign</mat-label>
-                            <input type="text" matInput placeholder="Search campaign" [formControl]="campaignCtrl"
-                                [matAutocomplete]="auto">
-
-                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectCampaign($event)">
-                                <mat-option *ngFor="let c of filteredCampaigns | async" [value]="c.campaignId">
-                                    {{ c.campaignId }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline" class="filter-item">
-                            <mat-label>From Date</mat-label>
-                            <input matInput [matDatepicker]="fromPicker" formControlName="from" [formGroup]="form">
-                            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #fromPicker></mat-datepicker>
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline" class="filter-item">
-                            <mat-label>To Date</mat-label>
-                            <input matInput [matDatepicker]="toPicker" formControlName="to" [formGroup]="form">
-                            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #toPicker></mat-datepicker>
-                        </mat-form-field>
-
-                        <button mat-raised-button color="primary" class="search-btn" (click)="search()">
-                            <mat-icon>search</mat-icon> Search
-                        </button>
-                    </div>
-                </form>
-                <!-- </div> -->
-
-                <!-- <div class="col-md-4 col-lg-4 col-xl-3 col-xxl-2 ms-auto my-2">
-          <button class="w-100" color="primary" mat-flat-button (click)="addDialog('500ms','500ms',2)">
-            Add new Package Type
-          </button>
-        </div> -->
-            </div>
-        </div>
-
-        <div class="shadow-box">
-            <div class="table-responsive">
-                <table mat-table [dataSource]="dataSource1" class="w-100">
-                    <ng-container matColumnDef="s_no">
-                        <th mat-header-cell *matHeaderCellDef>S.No.</th>
-                        <td mat-cell *matCellDef="let element; let i = index">
-                              {{ i + 1 + (pageIndex * pageSize) }}
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Campaign - Id <br />
-
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{element?.campaignId?.campaignId}}
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="campaignName">
-                        <th mat-header-cell *matHeaderCellDef style="white-space: nowrap;">
-                            Campaign Name
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element?.campaignId?.campaignName }}
-                        </td>
-                    </ng-container>
-
-
-                    <ng-container matColumnDef="bonusId">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Bonus - Id <br />
-
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element?.bonusId }}
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="french">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Domain <br />
-
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element?.domain }}
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="kinyarwanda">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Medium <br />
-
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element?.medium }}
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="createdAt">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Created At <br />
-
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element?.createdAt | date :'medium' }}
-                        </td>
-                    </ng-container>
-
-                    <!-- <ng-container matColumnDef="mobNo">
-                        <th mat-header-cell *matHeaderCellDef>
-                            Mobile <br />
-
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element?.mobileNumber }}
-                        </td>
-                    </ng-container> -->
-
-                    <!-- <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="action-icon d-flex justify-content-center gap-3 align-items-center">
-                                <span class="action-head">
-                                    <mat-icon matTooltip="Edit" class="text-success"
-                                        (click)="addDialog('500ms','500ms',2)">create
-                                    </mat-icon>
-                                </span>
-
-                                <span class="action-head">
-                                    <mat-icon matTooltip="Delete" (click)="deleteDialog('500ms','500ms')"
-                                        class="text-danger">delete</mat-icon>
-                                </span>
-
-                                <span class="action-head">
-                                    <mat-slide-toggle matTooltip="Block/Unblock"></mat-slide-toggle>
-                                </span>
-                            </div>
-                        </td>
-                    </ng-container> -->
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns1; sticky: true"></tr>
-
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
-                </table>
-            </div>
-
-            <!-- <mat-paginator #MatPaginator1 [pageSizeOptions]="[50, 100, 150]" showFirstLastButtons
-                aria-label="Select page of periodic elements">
-            </mat-paginator> -->
-               <mat-paginator class="paginator" [length]="totalRecords" [pageSize]="pageSize" (page)="onPageChange($event)"
-                [pageSizeOptions]="[200, 500, 1000]" showFirstLastButtons></mat-paginator>
-        </div>
+  <div class="row align-items-center">
+    <div class="col-12">
+      <div class="heading-row">
+        <h3>Bonus Page</h3>
+      </div>
     </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="shadow-box mt-0 p-3">
+    <form [formGroup]="form" class="row g-3 align-items-end">
+      <!-- Campaign -->
+      <div class="col-md-3 position-relative dp-down">
+            <label class="form-label">Select campaign</label>
+            <input type="text" class="form-control" placeholder="Search campaign" [formControl]="campaignCtrl"
+              (input)="filterCampaigns()" (click)="toggleDropdown()">
+
+            <!-- Dropdown List -->
+            <ul class="list-group position-absolute w-100" *ngIf="showDropdown && filteredCampaignsList.length > 0"
+              style="z-index:1000; max-height:200px; overflow-y:auto;">
+              <li class="list-group-item list-group-item-action" [title]="c.campaignId" *ngFor="let c of filteredCampaignsList"
+                (click)="selectCampaign(c)">
+                {{ c.campaignId }} - {{ c.campaignName }}
+              </li>
+            </ul>
+          </div>
+
+      <!-- From Date -->
+      <div class="col-md-3">
+        <label class="form-label">From Date</label>
+        <input type="date" class="form-control" formControlName="from">
+      </div>
+
+      <!-- To Date -->
+      <div class="col-md-3">
+        <label class="form-label">To Date</label>
+        <input type="date" class="form-control" formControlName="to">
+      </div>
+
+      <!-- Search Button -->
+       <div class="col-md-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary w-50" (click)="search()">
+              <i class="bi bi-search"></i> Search
+            </button>
+            <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </button>
+          </div>
+    </form>
+  </div>
+
+  <!-- Table Section -->
+  <div class="shadow-box mt-3 p-3">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>S.No.</th>
+            <th>Campaign - Id</th>
+            <th>Campaign Name</th>
+            <th>Bonus - Id</th>
+            <th>Domain</th>
+            <th>Medium</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let element of dataSource1.data; let i = index">
+            <td>{{ i + 1 + (pageIndex * pageSize) }}</td>
+            <td class="ellipsis">{{ element?.campaignId?.campaignId }}</td>
+            <td>{{ element?.campaignId?.campaignName }}</td>
+            <td>{{ element?.bonusId }}</td>
+            <td>{{ element?.domain }}</td>
+            <td>{{ element?.medium }}</td>
+            <td>{{ element?.createdAt | date:'medium' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bootstrap Pagination -->
+    <nav>
+      <ul class="pagination justify-content-end">
+        <li class="page-item" [class.disabled]="pageIndex === 0">
+          <button class="page-link" (click)="onPageChange({ pageIndex: pageIndex - 1, pageSize: pageSize })">
+            Previous
+          </button>
+        </li>
+
+        <li class="page-item disabled">
+          <span class="page-link">
+            Page {{ pageIndex + 1 }} of {{ Math.ceil(totalRecords / pageSize) }}
+          </span>
+        </li>
+
+        <li class="page-item" [class.disabled]="(pageIndex + 1) >= (totalRecords / pageSize)">
+          <button class="page-link" (click)="onPageChange({ pageIndex: pageIndex + 1, pageSize: pageSize })">
+            Next
+          </button>
+        </li>
+
+        <!-- Page Size Selector -->
+        <li class="page-item ms-2">
+          <select class="form-select" style="width:auto;"
+                  (change)="onPageChange({ pageIndex: 0, pageSize: $event.target})">
+            <option [selected]="pageSize==200" value="200">200</option>
+            <option [selected]="pageSize==500" value="500">500</option>
+            <option [selected]="pageSize==1000" value="1000">1000</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </div>

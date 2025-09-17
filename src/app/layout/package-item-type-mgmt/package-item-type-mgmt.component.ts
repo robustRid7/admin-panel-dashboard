@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
@@ -36,24 +36,22 @@ export class PackageItemTypeMgmtComponent implements OnInit {
   totalRecords: number = 0;
   pageIndex: number = 0;
   pageSize: number = 100;
+
   form: FormGroup;
   comapinList: any[] = [];
   campaignCtrl = new FormControl('');
-  filteredCampaigns!: Observable<any[]>;
-  displayedColumns1: string[] = ["s_no", "domain", "companinid", "campaignName", "bonusId", "medium", "name", "french", "kinyarwanda", 'mobNo', "createdAt"];
-  dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
+  filteredCampaignsList: any[] = [];
+  showDropdown: boolean = false;
 
-
-
-  @ViewChild("MatPaginator1") MatPaginator1!: MatPaginator;
-
-
-  ngAfterViewInit() {
-    this.dataSource1.paginator = this.MatPaginator1;
-
+  dataSource1: any[] = [];
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: any) {
+    const clickedInside = event.target.closest('.dp-down');
+    if (!clickedInside) {
+      this.showDropdown = false;
+    }
   }
-
-  constructor(public dialog: MatDialog,
+  constructor(
     private api: ApiService,
     private fb: FormBuilder,
     private filterService: FilterServiceService
@@ -64,140 +62,51 @@ export class PackageItemTypeMgmtComponent implements OnInit {
       to: [null]
     });
   }
+
   ngOnInit(): void {
     this.getComapinList();
-    this.getSignUpUsers()
-    this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCampaigns(value || ''))
-    );
+    this.getSignUpUsers();
   }
-
-
-  deleteDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
-    this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
-      maxWidth: "90vw",
-      panelClass: "dialog-layout",
-      disableClose: true,
-      enterAnimationDuration,
-      exitAnimationDuration,
-    })
-  }
-
-
-  addDialog(
-    enterAnimationDuration: string,
-    exitAnimationDuration: string,
-    element: any
-
-  ): void {
-    const dialogRef = this.dialog.open(AddEditDialogComponent, {
-      width: "550px",
-      height: "auto",
-      maxHeight: "100vh",
-      maxWidth: "90vw",
-      panelClass: "layout-dialog",
-      enterAnimationDuration,
-      exitAnimationDuration,
-      data: {
-        data: element
-      }
-
-    });
-  }
-
-  private _filterCampaigns(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    if (!filterValue) {
-      // agar kuch type nahi kiya -> full list dikhao
-      return this.comapinList;
-    }
-    return this.comapinList.filter(c =>
-      c.campaignId.toLowerCase().includes(filterValue)
-    );
-  }
-
-  // getComapinList() {
-  //   this.api.getDashBoardCompainList({}).subscribe({
-  //     next: (res: any) => {
-  //       this.comapinList = res.data || [];
-  //       this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-  //         startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
-  //         map(value => this._filterCampaigns(value || ''))
-  //       );
-  //     }
-  //   });
-  // }
-
   getComapinList() {
     this.api.getDashBoardCompainList({}).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
-        const savedFilters = this.filterService.getCurrentFilters();
-
-        if (savedFilters) {
-          this.form.patchValue({
-            from: savedFilters.from ? new Date(savedFilters.from) : null,
-            to: savedFilters.to ? new Date(savedFilters.to) : null,
-            // companyId: savedFilters.companyId || null
-          });
-        }
-
-        const selected = this.comapinList.find(
-          c => (c._id) == (savedFilters.campaignId)
-        );
-
-        if (selected) {
-          this.form.patchValue({ companyId: selected._id });
-          this.campaignCtrl.setValue(selected.campaignId, { emitEvent: false });
-
-        }
-
-        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filterCampaigns(value || ''))
-        );
+        this.filteredCampaignsList = [...this.comapinList];
       }
     });
   }
-
-  selectCampaign(event: any) {
-    const selected = this.comapinList.find(c => c.campaignId === event.option.value);
-    this.form.patchValue({ companyId: selected?._id });
+  filterCampaigns() {
+    const value = this.campaignCtrl.value?.toLowerCase() || '';
+    if (!value) {
+      this.filteredCampaignsList = [...this.comapinList];
+    } else {
+      this.filteredCampaignsList = this.comapinList.filter(c =>
+        c.campaignId.toLowerCase().includes(value)
+      );
+    }
   }
 
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
 
-
+  selectCampaign(c: any) {
+    this.form.patchValue({ companyId: c._id });
+    this.campaignCtrl.setValue(c.campaignId, { emitEvent: false });
+    this.showDropdown = false;
+  }
   getSignUpUsers() {
     const payload = {
       limit: this.pageSize,
       page: this.pageIndex + 1,
-      filters: {} as any
-    }
+      filters: {}
+    };
     this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
-        // this.dataSource1 = new MatTableDataSource(res.users);
-        // this.dataSource1.paginator = this.MatPaginator1;
-        this.dataSource1.data = res.users;
+        this.dataSource1 = res.users;
         this.totalRecords = res.pagination.total;
       }
-    })
-  }
-
-  onPageChange(event: any) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.getSignUpUsers();
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource1.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource1.paginator) {
-      this.dataSource1.paginator.firstPage();
-    }
+    });
   }
 
   search() {
@@ -211,17 +120,38 @@ export class PackageItemTypeMgmtComponent implements OnInit {
       page: this.pageIndex + 1,
       limit: this.pageSize,
       filters: filters
-    }
+    };
     this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
-        // this.dataSource1 = new MatTableDataSource(res.users);
-        // this.dataSource1.paginator = this.MatPaginator1;
-        this.dataSource1.data = res.users;
+        this.dataSource1 = res.users;
         this.totalRecords = res.pagination.total;
       }
     });
   }
 
+  nextPage() {
+    if ((this.pageIndex + 1) * this.pageSize < this.totalRecords) {
+      this.pageIndex++;
+      this.search();
+    }
+  }
 
+  prevPage() {
+    if (this.pageIndex > 0) {
+      this.pageIndex--;
+      this.search();
+    }
+  }
+  get totalPages(): number {
+    return Math.ceil(this.totalRecords / this.pageSize);
+  }
+  resetFilters() {
+  this.form.reset();
+  this.campaignCtrl.setValue('');
+  this.form.patchValue({ companyId: null });
 
+  this.pageIndex = 0;
+
+  this.getSignUpUsers();
+}
 }
