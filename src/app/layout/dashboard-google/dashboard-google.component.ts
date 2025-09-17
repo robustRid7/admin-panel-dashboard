@@ -111,74 +111,157 @@ export class DashboardGoogleComponent {
   }
 
 
+  // loadAnalyticsForChart2(payload: any) {
+  //   this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
+  //     next: (res: any) => {
+  //       if (res?.data) {
+  //         const data = res.data;
+
+  //         // Set stats for top boxes
+  //         this.totalActiveUsers = data.totalActiveUsers ?? 0;
+  //         this.totalSessions = data.totalSessions ?? 0;
+  //         this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
+  //         this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
+
+  //         // Prepare chart data
+  //         const graph = data.graphData;
+  //         const labels = graph.map((g: any) => g.date);
+
+  //         const activeUsersData = graph.map((g: any) => g.activeUsers);
+  //         const sessionsData = graph.map((g: any) => g.sessions);
+  //         const pageViewsData = graph.map((g: any) => g.screenPageViews);
+  //         const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
+
+  //         const datasets = [
+  //           {
+  //             label: 'Active Users',
+  //             data: activeUsersData,
+  //             borderColor: '#4caf50',
+  //             backgroundColor: '#4caf50',
+  //             fill: false,
+  //             tension: 0.4
+  //           },
+  //           {
+  //             label: 'Sessions',
+  //             data: sessionsData,
+  //             borderColor: '#2196f3',
+  //             backgroundColor: '#2196f3',
+  //             fill: false,
+  //             tension: 0.4
+  //           },
+  //           {
+  //             label: 'Page Views',
+  //             data: pageViewsData,
+  //             borderColor: '#ff9800',
+  //             backgroundColor: '#ff9800',
+  //             fill: false,
+  //             tension: 0.4
+  //           },
+  //           {
+  //             label: 'Engaged Sessions',
+  //             data: engagedSessionsData,
+  //             borderColor: '#9c27b0',
+  //             backgroundColor: '#9c27b0',
+  //             fill: false,
+  //             tension: 0.4
+  //           }
+  //         ];
+
+  //         if (this.chart2) this.chart2.destroy();
+  //         if (this.chartRef2?.nativeElement) {
+  //           this.chart2 = new Chart(this.chartRef2.nativeElement, {
+  //             type: 'line',
+  //             data: { labels, datasets },
+  //             options: { responsive: true, maintainAspectRatio: false }
+  //           });
+  //         }
+  //       }
+  //     },
+  //     error: (err: any) => { }
+  //   });
+  // }
   loadAnalyticsForChart2(payload: any) {
-    this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
-      next: (res: any) => {
-        if (res?.data) {
-          const data = res.data;
+  this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
+    next: (res: any) => {
+      if (res?.data) {
+        const data = res.data;
 
-          // Set stats for top boxes
-          this.totalActiveUsers = data.totalActiveUsers ?? 0;
-          this.totalSessions = data.totalSessions ?? 0;
-          this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
-          this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
+        // Set stats for top boxes
+        this.totalActiveUsers = data.totalActiveUsers ?? 0;
+        this.totalSessions = data.totalSessions ?? 0;
+        this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
+        this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
 
-          // Prepare chart data
-          const graph = data.graphData;
-          const labels = graph.map((g: any) => g.date);
+        // Prepare chart data
+        let graph = data.graphData || [];
 
-          const activeUsersData = graph.map((g: any) => g.activeUsers);
-          const sessionsData = graph.map((g: any) => g.sessions);
-          const pageViewsData = graph.map((g: any) => g.screenPageViews);
-          const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
+        // ✅ Dates ko sort kar lo
+        graph = graph.sort(
+          (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
 
-          const datasets = [
-            {
-              label: 'Active Users',
-              data: activeUsersData,
-              borderColor: '#4caf50',
-              backgroundColor: '#4caf50',
-              fill: false,
-              tension: 0.4
-            },
-            {
-              label: 'Sessions',
-              data: sessionsData,
-              borderColor: '#2196f3',
-              backgroundColor: '#2196f3',
-              fill: false,
-              tension: 0.4
-            },
-            {
-              label: 'Page Views',
-              data: pageViewsData,
-              borderColor: '#ff9800',
-              backgroundColor: '#ff9800',
-              fill: false,
-              tension: 0.4
-            },
-            {
-              label: 'Engaged Sessions',
-              data: engagedSessionsData,
-              borderColor: '#9c27b0',
-              backgroundColor: '#9c27b0',
-              fill: false,
-              tension: 0.4
-            }
-          ];
+        const labels = graph.map((g: any) => g.date);
+        const activeUsersData = graph.map((g: any) => g.activeUsers);
+        const sessionsData = graph.map((g: any) => g.sessions);
+        const pageViewsData = graph.map((g: any) => g.screenPageViews);
+        const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
 
-          if (this.chart2) this.chart2.destroy();
-          if (this.chartRef2?.nativeElement) {
-            this.chart2 = new Chart(this.chartRef2.nativeElement, {
-              type: 'line',
-              data: { labels, datasets },
-              options: { responsive: true, maintainAspectRatio: false }
-            });
+        const datasets = [
+          {
+            label: 'Active Users',
+            data: activeUsersData,
+            borderColor: '#4caf50',
+            backgroundColor: '#4caf50',
+            fill: false,
+            tension: 0.4
+          },
+          {
+            label: 'Sessions',
+            data: sessionsData,
+            borderColor: '#2196f3',
+            backgroundColor: '#2196f3',
+            fill: false,
+            tension: 0.4
+          },
+          {
+            label: 'Page Views',
+            data: pageViewsData,
+            borderColor: '#ff9800',
+            backgroundColor: '#ff9800',
+            fill: false,
+            tension: 0.4
+          },
+          {
+            label: 'Engaged Sessions',
+            data: engagedSessionsData,
+            borderColor: '#9c27b0',
+            backgroundColor: '#9c27b0',
+            fill: false,
+            tension: 0.4
           }
+        ];
+
+        if (this.chart2) this.chart2.destroy();
+        if (this.chartRef2?.nativeElement) {
+          this.chart2 = new Chart(this.chartRef2.nativeElement, {
+            type: 'line',
+            data: { labels, datasets },
+            options: { 
+              responsive: true, 
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  ticks: { autoSkip: true, maxTicksLimit: 10 } // zyada dates ho to skip
+                }
+              }
+            }
+          });
         }
-      },
-      error: (err: any) => { }
-    });
-  }
+      }
+    },
+    error: (err: any) => { }
+  });
+}
+
 
 }
