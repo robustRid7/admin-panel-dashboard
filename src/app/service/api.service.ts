@@ -73,4 +73,8 @@ export class ApiService {
   getWhatsUpUserList(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/whatsapp/fetch`, data);
   }
+
+  getDomainList(data: any): Observable<any>{
+  return this.http.post(`${this.baseUrl}/dash-board/domains`, data);
+  }
 }

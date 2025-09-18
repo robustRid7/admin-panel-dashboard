@@ -60,25 +60,99 @@ export class LandingPageComponent {
     private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
+      domainId: [''],
       companyId: [null],
       from: [null],
       to: [null]
     });
   }
 
+  domainCtrl = new FormControl('');
+  showDomainDropdown = false;
+  domainList: any[] = [
+  ];
+  filteredDomainList: any[] = [];
+
+  // On Input filter
+  filterDomains() {
+    const searchValue = this.domainCtrl.value?.toLowerCase() || '';
+    this.filteredDomainList = this.domainList.filter(d =>
+      d.domainName.toLowerCase().includes(searchValue) ||
+      d.domainId.toString().includes(searchValue)
+    );
+    this.showDomainDropdown = true;
+  }
+
+  // Toggle dropdown
+  toggleDomainDropdown() {
+    this.showDomainDropdown = !this.showDomainDropdown;
+    if (this.showDomainDropdown) {
+      this.filteredDomainList = [...this.domainList];
+    }
+  }
+
+  // Select domain
+ 
+
+
   ngOnInit(): void {
-    this.getComapinList();
+    this.getDomainList();
+    // this.getComapinList();
     this.getSignUpUsers();
 
   }
-  getComapinList() {
-    this.api.getDashBoardCompainList({}).subscribe({
+
+  // getComapinList() {
+  //   this.api.getDashBoardCompainList({}).subscribe({
+  //     next: (res: any) => {
+  //       this.comapinList = res.data || [];
+  //       this.filteredCampaignsList = [...this.comapinList];
+  //     }
+  //   });
+  // }
+
+getComapinList(domainId: string) {
+  this.api.getDashBoardCompainList({ domain: domainId }).subscribe({
+    next: (res: any) => {
+      this.comapinList = res.data || [];
+      this.filteredCampaignsList = [...this.comapinList];
+      this.campaignCtrl.setValue(''); // reset campaign search box
+    }
+  });
+}
+
+    getDomainList() {
+    this.api.getDomainList({}).subscribe({
       next: (res: any) => {
-        this.comapinList = res.data || [];
-        this.filteredCampaignsList = [...this.comapinList];
+        this.domainList = res.data || [];
+        this.filteredDomainList = [...this.domainList];
+        // this.filteredCampaignsList = [...this.comapinList];
       }
     });
   }
+
+//  selectDomain(domain: any) {
+//   this.domainCtrl.setValue(domain.domainName);
+//   this.form.get('domainId')?.setValue(domain._id);
+//   this.showDomainDropdown = false;
+
+//   // ✅ Domain select hote hi campaigns laa lo
+//   this.getComapinList(domain._id);
+// }
+
+selectDomain(domain: any) {
+  // jo field tumhare API se aa rahi hai usko set karo
+  this.domainCtrl.setValue(domain.domainName || domain.domain);  
+
+  this.form.get('domainId')?.setValue(domain._id);
+  this.showDomainDropdown = false;
+
+  // ✅ Domain select hote hi campaigns laa lo
+  this.getComapinList(domain._id);
+}
+
+
+
   filterCampaigns() {
     const value = this.campaignCtrl.value?.toLowerCase() || '';
     if (!value) {
@@ -134,15 +208,15 @@ export class LandingPageComponent {
       }
     });
   }
-resetFilters() {
-  this.form.reset();
-  this.campaignCtrl.setValue('');
-  this.form.patchValue({ companyId: null });
+  resetFilters() {
+    this.form.reset();
+    this.campaignCtrl.setValue('');
+    this.form.patchValue({ companyId: null });
 
-  this.pageIndex = 0;
+    this.pageIndex = 0;
 
-  this.getSignUpUsers();
-}
+    this.getSignUpUsers();
+  }
   totalPages() {
     return Math.ceil(this.totalRecords / this.pageSize);
   }

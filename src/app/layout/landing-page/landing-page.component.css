@@ -2,16 +2,20 @@
 
 .filter-bar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;     /* responsive ke liye */
+  gap: 16px;           /* gap between items */
+  align-items: flex-end;
 }
 
 .filter-item {
-  min-width: 220px;
-  flex: 1;
+  flex: 1;             /* sab equal width lenge */
+  min-width: 180px;    /* minimum width */
 }
+
+.dp-down {
+  position: relative;
+}
+
 
 .search-btn {
   height: 56px;
@@ -60,15 +64,38 @@ table tbody tr td {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.list-group-item-action{
-text-overflow: ellipsis;
-    max-width: 18rem;
-    white-space: nowrap;
-    overflow: hidden;
-    line-height: 0;
-    padding: 20px;
+
+
+form .col-md-2, 
+form .col-md-3 {
+  margin-bottom: 15px;
 }
+
+.dp-down {
+  position: relative;
+}
+
+
+.list-group-item-action {
+  text-overflow: ellipsis;
+  max-width: 20rem;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 0;
+  padding: 20px;
+}
+
 .list-group {
   background-color: #fff;
   overflow-x: hidden;
 }
+
+.group-list {
+  width: 93% !important;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+

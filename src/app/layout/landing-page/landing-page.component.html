@@ -10,6 +10,27 @@
     <div class="shadow-box mt-0">
       <div class="row align-items-center">
         <form [formGroup]="form" class="row align-items-end">
+
+          <!-- Domain -->
+          <div class="col-md-3 position-relative dp-down">
+            <label class="form-label">Select Domain</label>
+            <!-- <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()"> -->
+            <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()">
+
+
+            <!-- Dropdown List -->
+            <ul class="list-group position-absolute w-100" *ngIf="showDomainDropdown && filteredDomainList.length > 0"
+              style="z-index:1000; max-height:200px; overflow-y:auto;">
+              <li class="list-group-item list-group-item-action" [title]="d.domainName"
+                *ngFor="let d of filteredDomainList" (click)="selectDomain(d)">
+                {{ d.domain }}
+              </li>
+            </ul>
+          </div>
+
+
           <!-- Campaign -->
           <div class="col-md-3 position-relative dp-down">
             <label class="form-label">Select campaign</label>
@@ -17,10 +38,10 @@
               (input)="filterCampaigns()" (click)="toggleDropdown()">
 
             <!-- Dropdown List -->
-            <ul class="list-group position-absolute w-100" *ngIf="showDropdown && filteredCampaignsList.length > 0"
-              style="z-index:1000; max-height:200px; overflow-y:auto;">
-              <li class="list-group-item list-group-item-action" [title]="c.campaignId" *ngFor="let c of filteredCampaignsList"
-                (click)="selectCampaign(c)">
+            <ul class="list-group position-absolute w-100 group-list"
+              *ngIf="showDropdown && filteredCampaignsList.length > 0">
+              <li class="list-group-item list-group-item-action" [title]="c.campaignId"
+                *ngFor="let c of filteredCampaignsList" (click)="selectCampaign(c)">
                 {{ c.campaignId }} - {{ c.campaignName }}
               </li>
             </ul>
