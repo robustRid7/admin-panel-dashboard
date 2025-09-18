@@ -32,6 +32,8 @@ export class DashboardGoogleComponent {
   filteredCampaigns!: Observable<any[]>;
 
   filteredCampaignsList: any[] = [];
+  mediumList: string[] = ['Google', 'youtube'];
+
   showDropdown: boolean = false;
   allUsers: any[] = [];
   domainCtrl = new FormControl('');
@@ -42,6 +44,7 @@ export class DashboardGoogleComponent {
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       domainId: [null],
+      medium: ['Google'],
       companyId: [null],
       from: [null],
       to: [null]
@@ -99,14 +102,14 @@ export class DashboardGoogleComponent {
     });
   }
 
+
   selectDomain(domain: any) {
-    // jo field tumhare API se aa rahi hai usko set karo
     this.domainCtrl.setValue(domain.domainName || domain.domain);
     this.form.get('domainId')?.setValue(domain._id);
     this.showDomainDropdown = false;
-
-    this.getComapinList(domain._id);
+    this.getComapinList();
   }
+
 
   toggleDomainDropdown() {
     this.showDomainDropdown = !this.showDomainDropdown;
@@ -151,8 +154,17 @@ export class DashboardGoogleComponent {
   //   });
   // }
 
-  getComapinList(domainId: string) {
-    this.api.getDashBoardCompainList({ domain: domainId, medium: "google" }).subscribe({
+  getComapinList() {
+    const domainId = this.form.get('domainId')?.value;
+    const medium = this.form.get('medium')?.value;
+
+    if (!domainId || !medium) return;
+
+    const payload: any = {
+      domain: domainId,
+      medium: medium
+    };
+    this.api.getDashBoardCompainList(payload).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];
@@ -160,6 +172,13 @@ export class DashboardGoogleComponent {
       }
     });
   }
+
+  onMediumChange(event: any) {
+    const medium = event.target.value;
+    this.form.patchValue({ medium: medium });
+    this.getComapinList(); // domain + medium dono jayenge
+  }
+
 
 
   search() {

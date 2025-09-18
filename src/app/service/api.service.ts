@@ -74,7 +74,11 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/whatsapp/fetch`, data);
   }
 
-  getDomainList(data: any): Observable<any>{
-  return this.http.post(`${this.baseUrl}/dash-board/domains`, data);
+  getDomainList(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/dash-board/domains`, data);
+  }
+
+  getGoogleCompaignList(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/dash-board/campaigns/google/campaign-analytics`, data);
   }
 }

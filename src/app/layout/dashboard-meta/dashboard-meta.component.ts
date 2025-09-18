@@ -36,6 +36,7 @@ export class DashboardMetaComponent {
   domainList: any[] = [
   ];
   filteredDomainList: any[] = [];
+  mediumList: string[] = ['Facebook', 'Instagram', 'WhatsApp'];
   @HostListener('document:click', ['$event'])
   onClickOutside(event: any) {
     const clickedInside = event.target.closest('.dp-down');
@@ -46,6 +47,7 @@ export class DashboardMetaComponent {
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       domainId: [null],
+      medium: ['Facebook'],
       companyId: [null],
       from: [null],
       to: [null]
@@ -86,12 +88,10 @@ export class DashboardMetaComponent {
   }
 
   selectDomain(domain: any) {
-    // jo field tumhare API se aa rahi hai usko set karo
     this.domainCtrl.setValue(domain.domainName || domain.domain);
     this.form.get('domainId')?.setValue(domain._id);
     this.showDomainDropdown = false;
-
-    this.getComapinList(domain._id);
+    this.getComapinList();
   }
 
   toggleDomainDropdown() {
@@ -110,8 +110,23 @@ export class DashboardMetaComponent {
     this.showDomainDropdown = true;
   }
 
-  getComapinList(domainId: string) {
-    this.api.getDashBoardCompainList({ domain: domainId, medium: "meta" }).subscribe({
+  onMediumChange(event: any) {
+    const medium = event.target.value;
+    this.form.patchValue({ medium: medium });
+    this.getComapinList(); // domain + medium dono jayenge
+  }
+
+  getComapinList() {
+    const domainId = this.form.get('domainId')?.value;
+    const medium = this.form.get('medium')?.value;
+
+    if (!domainId || !medium) return;
+
+    const payload: any = {
+      domain: domainId,
+      medium: medium
+    };
+    this.api.getDashBoardCompainList(payload).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];

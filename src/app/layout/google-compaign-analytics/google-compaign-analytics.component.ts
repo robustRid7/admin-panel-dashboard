@@ -23,8 +23,9 @@ export class GoogleCompaignAnalyticsComponent {
   impressions = 0;
   clicks = 0;
   reach = 0;
+  conversions = 0
   uniqueClicks = 0;
-
+  cost = 0;
   totalScreenPageViews = 0;
   totalEngagedSessions = 0;
   campaignCtrl = new FormControl('');
@@ -36,6 +37,7 @@ export class GoogleCompaignAnalyticsComponent {
   domainList: any[] = [
   ];
   filteredDomainList: any[] = [];
+  mediumList: string[] = ['Google', 'youtube'];
   @HostListener('document:click', ['$event'])
   onClickOutside(event: any) {
     const clickedInside = event.target.closest('.dp-down');
@@ -46,6 +48,7 @@ export class GoogleCompaignAnalyticsComponent {
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       domainId: [null],
+       medium: ['Google'],
       companyId: [null],
       from: [null],
       to: [null]
@@ -85,12 +88,10 @@ export class GoogleCompaignAnalyticsComponent {
   }
 
   selectDomain(domain: any) {
-    // jo field tumhare API se aa rahi hai usko set karo
     this.domainCtrl.setValue(domain.domainName || domain.domain);
     this.form.get('domainId')?.setValue(domain._id);
     this.showDomainDropdown = false;
-
-    this.getComapinList(domain._id);
+    this.getComapinList();
   }
 
   toggleDomainDropdown() {
@@ -109,8 +110,23 @@ export class GoogleCompaignAnalyticsComponent {
     this.showDomainDropdown = true;
   }
 
-  getComapinList(domainId: string) {
-    this.api.getDashBoardCompainList({ domain: domainId, medium: "meta" }).subscribe({
+  onMediumChange(event: any) {
+    const medium = event.target.value;
+    this.form.patchValue({ medium: medium });
+    this.getComapinList(); // domain + medium dono jayenge
+  }
+
+  getComapinList() {
+    const domainId = this.form.get('domainId')?.value;
+    const medium = this.form.get('medium')?.value;
+
+    if (!domainId || !medium) return;
+
+    const payload: any = {
+      domain: domainId,
+      medium: medium
+    };
+    this.api.getDashBoardCompainList(payload).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];
@@ -170,7 +186,7 @@ export class GoogleCompaignAnalyticsComponent {
 
 
   loadAnalyticsForMeta(payload: any) {
-    this.api.getDashboardMetaAnalytics(payload).subscribe({
+    this.api.getGoogleCompaignList(payload).subscribe({
       next: (res: any) => {
         if (res?.data) {
           const data = res.data;
@@ -178,18 +194,17 @@ export class GoogleCompaignAnalyticsComponent {
           // ✅ Stats for top boxes
           this.impressions = data.totals?.impressions ?? 0;
           this.clicks = data.totals?.clicks ?? 0;
-          this.reach = data.totals?.reach ?? 0;
-          this.uniqueClicks = data.totals?.unique_clicks ?? 0;
+          this.conversions = data.totals?.conversions ?? 0;
+          this.cost = data.totals?.spend ?? 0;
 
           // ✅ Prepare chart data
           const graph = data.data; // 👈 array use karna hai
-          const labels = graph.map((g: any) => g.date_start);
+          const labels = graph.map((g: any) => g.date);
 
           const impressionsData = graph.map((g: any) => g.impressions);
-          const clicksData = graph.map((g: any) => g.clicks);
-          const spendData = graph.map((g: any) => g.spend);
-          const uniqueClicksData = graph.map((g: any) => g.unique_clicks);
-          const reachData = graph.map((g: any) => g.reach);
+          const conversionsData = graph.map((g: any) => g.conversions);
+          const ClicksData = graph.map((g: any) => g.clicks);
+          const costData = graph.map((g: any) => g.cost);
 
           const datasets = [
             {
@@ -202,36 +217,28 @@ export class GoogleCompaignAnalyticsComponent {
             },
             {
               label: 'Clicks',
-              data: clicksData,
+              data: ClicksData,
               borderColor: '#2196f3',
               backgroundColor: '#2196f3',
               fill: false,
               tension: 0.4
             },
             {
-              label: 'Spend',
-              data: spendData,
+              label: 'Conversions',
+              data: conversionsData,
               borderColor: '#ff9800',
               backgroundColor: '#ff9800',
               fill: false,
               tension: 0.4
             },
             {
-              label: 'Unique Clicks',
-              data: uniqueClicksData,
+              label: 'Cost',
+              data: costData,
               borderColor: '#9c27b0',
               backgroundColor: '#9c27b0',
               fill: false,
               tension: 0.4
             },
-            {
-              label: 'Reach',
-              data: reachData,
-              borderColor: '#e91e63',
-              backgroundColor: '#e91e63',
-              fill: false,
-              tension: 0.4
-            }
           ];
 
           if (this.chart2) this.chart2.destroy();
