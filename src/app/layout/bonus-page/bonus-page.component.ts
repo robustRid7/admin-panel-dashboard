@@ -31,8 +31,8 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
   styleUrls: ['./bonus-page.component.css']
 })
 export class BonusPageComponent {
-   Math = Math;
-    totalRecords: number = 0;
+  Math = Math;
+  totalRecords: number = 0;
   pageIndex: number = 0;
   pageSize: number = 200;
 
@@ -43,12 +43,18 @@ export class BonusPageComponent {
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
   allUsers: any[] = [];
+  domainCtrl = new FormControl('');
+  showDomainDropdown = false;
+  domainList: any[] = [
+  ];
+  filteredDomainList: any[] = [];
   constructor(
     private api: ApiService,
     private fb: FormBuilder,
     private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
+      domainId: [null],
       companyId: [null],
       from: [null],
       to: [null]
@@ -62,17 +68,58 @@ export class BonusPageComponent {
     }
   }
   ngOnInit(): void {
-    this.getComapinList();
+    this.getDomainList();
     this.getSignUpUsers();
   }
-  getComapinList() {
-    this.api.getDashBoardCompainList({}).subscribe({
+
+  getDomainList() {
+    this.api.getDomainList({}).subscribe({
       next: (res: any) => {
-        this.comapinList = res.data || [];
-        this.filteredCampaignsList = [...this.comapinList];
+        this.domainList = res.data || [];
+        this.filteredDomainList = [...this.domainList];
+        // this.filteredCampaignsList = [...this.comapinList];
       }
     });
   }
+
+  selectDomain(domain: any) {
+    // jo field tumhare API se aa rahi hai usko set karo
+    this.domainCtrl.setValue(domain.domainName || domain.domain);
+    this.form.get('domainId')?.setValue(domain._id);
+    this.showDomainDropdown = false;
+
+    this.getComapinList(domain._id);
+  }
+
+  toggleDomainDropdown() {
+    this.showDomainDropdown = !this.showDomainDropdown;
+    if (this.showDomainDropdown) {
+      this.filteredDomainList = [...this.domainList];
+    }
+  }
+
+  filterDomains() {
+    const searchValue = this.domainCtrl.value?.toLowerCase() || '';
+    this.filteredDomainList = this.domainList.filter(d =>
+      d.domainName.toLowerCase().includes(searchValue) ||
+      d.domainId.toString().includes(searchValue)
+    );
+    this.showDomainDropdown = true;
+  }
+
+
+
+  getComapinList(domainId: string) {
+    this.api.getDashBoardCompainList({ domain: domainId }).subscribe({
+      next: (res: any) => {
+        this.comapinList = res.data || [];
+        this.filteredCampaignsList = [...this.comapinList];
+        this.campaignCtrl.setValue(''); 
+      }
+    });
+  }
+
+
   filterCampaigns() {
     const value = this.campaignCtrl.value?.toLowerCase() || '';
     if (!value) {
@@ -102,7 +149,7 @@ export class BonusPageComponent {
     };
     this.api.bonusPageList(payload).subscribe({
       next: (res: any) => {
-         this.allUsers = res.users;
+        this.allUsers = res.users;
         this.dataSource1 = this.allUsers;
         // this.totalRecords = res.pagination?.total || 0;
 
@@ -113,11 +160,11 @@ export class BonusPageComponent {
     });
   }
 
-    totalPages() {
+  totalPages() {
     return Math.ceil(this.totalRecords / this.pageSize);
   }
 
-    prevPage() {
+  prevPage() {
     if (this.pageIndex > 0) {
       this.pageIndex--;
       this.getSignUpUsers();
@@ -159,14 +206,18 @@ export class BonusPageComponent {
       }
     });
   }
-resetFilters() {
-  this.form.reset();
-  this.campaignCtrl.setValue('');
-  this.form.patchValue({ companyId: null });
 
-  this.pageIndex = 0;
 
-  this.dataSource1 = [...this.allUsers];
-}
+  resetFilters() {
+    this.form.reset();
+    this.domainCtrl.setValue('');
+    this.form.patchValue({ domainId: null });
+    this.campaignCtrl.setValue('');
+    this.form.patchValue({ companyId: null });
+
+    this.pageIndex = 0;
+
+    this.dataSource1 = [...this.allUsers];
+  }
 
 }

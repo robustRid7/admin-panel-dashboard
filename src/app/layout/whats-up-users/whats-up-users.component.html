@@ -10,6 +10,24 @@
   <!-- Filters -->
   <div class="shadow-box mt-0 p-3">
     <form [formGroup]="form" class="row g-3 align-items-end">
+
+       <div class="col-md-3 position-relative dp-down">
+            <label class="form-label">Select Domain</label>
+            <!-- <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()"> -->
+            <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()">
+
+
+            <!-- Dropdown List -->
+            <ul class="list-group position-absolute w-100" *ngIf="showDomainDropdown && filteredDomainList.length > 0"
+              style="z-index:1000; max-height:200px; overflow-y:auto;">
+              <li class="list-group-item list-group-item-action" [title]="d.domainName"
+                *ngFor="let d of filteredDomainList" (click)="selectDomain(d)">
+                {{ d.domain }}
+              </li>
+            </ul>
+          </div>
       <div class="col-md-3 position-relative dp-down">
         <label class="form-label">Select campaign</label>
         <input type="text" class="form-control" placeholder="Search campaign" [formControl]="campaignCtrl"

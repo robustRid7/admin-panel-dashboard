@@ -45,6 +45,11 @@ export class PackageItemTypeMgmtComponent implements OnInit {
 
   dataSource1: any[] = [];
   allUsers: any[] = [];
+  domainCtrl = new FormControl('');
+  showDomainDropdown = false;
+  domainList: any[] = [
+  ];
+  filteredDomainList: any[] = [];
   @HostListener('document:click', ['$event'])
   onClickOutside(event: any) {
     const clickedInside = event.target.closest('.dp-down');
@@ -58,6 +63,7 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
+      domainId: [null],
       companyId: [null],
       from: [null],
       to: [null]
@@ -65,17 +71,56 @@ export class PackageItemTypeMgmtComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getComapinList();
+    this.getDomainList();
     this.getSignUpUsers();
   }
-  getComapinList() {
-    this.api.getDashBoardCompainList({}).subscribe({
+
+  getDomainList() {
+    this.api.getDomainList({}).subscribe({
       next: (res: any) => {
-        this.comapinList = res.data || [];
-        this.filteredCampaignsList = [...this.comapinList];
+        this.domainList = res.data || [];
+        this.filteredDomainList = [...this.domainList];
+        // this.filteredCampaignsList = [...this.comapinList];
       }
     });
   }
+
+  selectDomain(domain: any) {
+    // jo field tumhare API se aa rahi hai usko set karo
+    this.domainCtrl.setValue(domain.domainName || domain.domain);
+    this.form.get('domainId')?.setValue(domain._id);
+    this.showDomainDropdown = false;
+
+    this.getComapinList(domain._id);
+  }
+
+  toggleDomainDropdown() {
+    this.showDomainDropdown = !this.showDomainDropdown;
+    if (this.showDomainDropdown) {
+      this.filteredDomainList = [...this.domainList];
+    }
+  }
+
+  filterDomains() {
+    const searchValue = this.domainCtrl.value?.toLowerCase() || '';
+    this.filteredDomainList = this.domainList.filter(d =>
+      d.domainName.toLowerCase().includes(searchValue) ||
+      d.domainId.toString().includes(searchValue)
+    );
+    this.showDomainDropdown = true;
+  }
+
+  getComapinList(domainId: string) {
+    this.api.getDashBoardCompainList({ domain: domainId }).subscribe({
+      next: (res: any) => {
+        this.comapinList = res.data || [];
+        this.filteredCampaignsList = [...this.comapinList];
+        this.campaignCtrl.setValue('');
+      }
+    });
+  }
+
+
   filterCampaigns() {
     const value = this.campaignCtrl.value?.toLowerCase() || '';
     if (!value) {
@@ -151,6 +196,8 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     this.form.reset();
     this.campaignCtrl.setValue('');
     this.form.patchValue({ companyId: null });
+    this.domainCtrl.setValue('');
+    this.form.patchValue({ domainId: null });
 
     this.pageIndex = 0;
     this.dataSource1 = [...this.allUsers];
