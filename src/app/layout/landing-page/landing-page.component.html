@@ -86,6 +86,7 @@
                   <th>Bonus - Id</th>
                   <th>Domain</th>
                   <th>Medium</th>
+                    <th>Landing Page Domain</th>
                   <th>Created At</th>
                 </tr>
               </thead>
@@ -97,6 +98,7 @@
                   <td class="text-nowrap">{{ element?.bonusId }}</td>
                   <td class="text-nowrap">{{ element?.domain }}</td>
                   <td class="text-nowrap">{{ element?.medium }}</td>
+                  <td class="text-nowrap">{{ element?.landingPageName }}</td>
                   <td class="text-nowrap">{{ element?.createdAt | date:'medium' }}</td>
                 </tr>
                 <tr *ngIf="data.length === 0">
