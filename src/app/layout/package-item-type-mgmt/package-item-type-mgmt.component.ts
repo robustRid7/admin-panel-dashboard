@@ -1,31 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatDialog } from "@angular/material/dialog";
-import { DeleteDialogComponent } from "../common-dialog/delete-dialog/delete-dialog.component";
-import { AddEditDialogComponent } from "../common-dialog/add-edit-dialog/add-edit-dialog.component";
 import { ApiService } from "src/app/service/api.service";
 import { FormGroup, FormControl, FormBuilder } from "@angular/forms";
-import { Observable } from "rxjs";
-import { startWith, map } from 'rxjs/operators';
 import { FilterServiceService } from "src/app/service/filter-service.service";
-// import { ViewDialogComponent } from "../common-dialog/view-dialog/view-dialog.component";
-
-export interface PeriodicElement1 {
-  s_no: number;
-  name: string;
-  french: string;
-  kinyarwanda: string;
-}
-
-const ELEMENT_DATA1: PeriodicElement1[] = [
-  {
-    s_no: 1,
-    name: "Lorem",
-    french: "Lorem",
-    kinyarwanda: "Lorem",
-  },
-];
 
 @Component({
   selector: 'app-package-item-type-mgmt',

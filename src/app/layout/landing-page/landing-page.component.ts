@@ -1,33 +1,9 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'src/app/service/api.service';
-import { AddEditDialogComponent } from '../common-dialog/add-edit-dialog/add-edit-dialog.component';
-import { DeleteDialogComponent } from '../common-dialog/delete-dialog/delete-dialog.component';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { MatSort } from '@angular/material/sort';
 import { FilterServiceService } from 'src/app/service/filter-service.service';
-import { combineLatest } from 'rxjs';
-export interface PeriodicElement1 {
-  s_no: number;
-  name: string;
-  french: string;
-  kinyarwanda: string;
-  LName: string;
-}
 
-const ELEMENT_DATA1: PeriodicElement1[] = [
-  {
-    s_no: 1,
-    name: "Lorem",
-    french: "Lorem",
-    kinyarwanda: "Lorem",
-    LName: "Lorem",
-  },
-];
 @Component({
   selector: 'app-landing-page',
   templateUrl: './landing-page.component.html',
@@ -36,8 +12,6 @@ const ELEMENT_DATA1: PeriodicElement1[] = [
 export class LandingPageComponent {
   form: FormGroup;
   campaignCtrl = new FormControl('');
-  displayedColumns1: string[] = ["s_no", "name", "campaignName", "bonusId", "french", "kinyarwanda", "LName", "createdAt",];
-  dataSource1 = new MatTableDataSource<PeriodicElement1>(ELEMENT_DATA1);
   comapinList: any[] = [];
   filteredCampaigns: any[] = [];
 
@@ -73,9 +47,6 @@ export class LandingPageComponent {
     });
   }
 
-
-
-  // On Input filter
   filterDomains() {
     const searchValue = this.domainCtrl.value?.toLowerCase() || '';
     this.filteredDomainList = this.domainList.filter(d =>
@@ -85,7 +56,6 @@ export class LandingPageComponent {
     this.showDomainDropdown = true;
   }
 
-  // Toggle dropdown
   toggleDomainDropdown() {
     this.showDomainDropdown = !this.showDomainDropdown;
     if (this.showDomainDropdown) {
@@ -93,32 +63,17 @@ export class LandingPageComponent {
     }
   }
 
-  // Select domain
-
-
-
   ngOnInit(): void {
     this.getDomainList();
-    // this.getComapinList();
     this.getSignUpUsers();
-
   }
-
-  // getComapinList() {
-  //   this.api.getDashBoardCompainList({}).subscribe({
-  //     next: (res: any) => {
-  //       this.comapinList = res.data || [];
-  //       this.filteredCampaignsList = [...this.comapinList];
-  //     }
-  //   });
-  // }
 
   getComapinList(domainId: string) {
     this.api.getDashBoardCompainList({ domain: domainId }).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];
-        this.campaignCtrl.setValue(''); // reset campaign search box
+        this.campaignCtrl.setValue('');
       }
     });
   }
@@ -133,25 +88,12 @@ export class LandingPageComponent {
     });
   }
 
-  //  selectDomain(domain: any) {
-  //   this.domainCtrl.setValue(domain.domainName);
-  //   this.form.get('domainId')?.setValue(domain._id);
-  //   this.showDomainDropdown = false;
-
-  //   // ✅ Domain select hote hi campaigns laa lo
-  //   this.getComapinList(domain._id);
-  // }
-
   selectDomain(domain: any) {
-    // jo field tumhare API se aa rahi hai usko set karo
     this.domainCtrl.setValue(domain.domainName || domain.domain);
     this.form.get('domainId')?.setValue(domain._id);
     this.showDomainDropdown = false;
-
     this.getComapinList(domain._id);
   }
-
-
 
   filterCampaigns() {
     const value = this.campaignCtrl.value?.toLowerCase() || '';

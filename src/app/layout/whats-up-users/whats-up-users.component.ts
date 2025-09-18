@@ -1,29 +1,7 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Observable, startWith, map } from 'rxjs';
 import { ApiService } from 'src/app/service/api.service';
 import { FilterServiceService } from 'src/app/service/filter-service.service';
-import { AddEditDialogComponent } from '../common-dialog/add-edit-dialog/add-edit-dialog.component';
-import { DeleteDialogComponent } from '../common-dialog/delete-dialog/delete-dialog.component';
-export interface PeriodicElement1 {
-  s_no: number;
-  name: string;
-  french: string;
-  kinyarwanda: string;
-}
-
-const ELEMENT_DATA1: PeriodicElement1[] = [
-  {
-    s_no: 1,
-    name: "Lorem",
-    french: "Lorem",
-    kinyarwanda: "Lorem",
-  },
-];
 
 @Component({
   selector: 'app-whats-up-users',

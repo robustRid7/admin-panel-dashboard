@@ -1,29 +1,7 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'src/app/service/api.service';
-import { AddEditDialogComponent } from '../common-dialog/add-edit-dialog/add-edit-dialog.component';
-import { DeleteDialogComponent } from '../common-dialog/delete-dialog/delete-dialog.component';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 import { FilterServiceService } from 'src/app/service/filter-service.service';
-export interface PeriodicElement1 {
-  s_no: number;
-  name: string;
-  french: string;
-  kinyarwanda: string;
-}
-
-const ELEMENT_DATA1: PeriodicElement1[] = [
-  {
-    s_no: 1,
-    name: "Lorem",
-    french: "Lorem",
-    kinyarwanda: "Lorem",
-  },
-];
 
 @Component({
   selector: 'app-bonus-page',
@@ -114,7 +92,7 @@ export class BonusPageComponent {
       next: (res: any) => {
         this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];
-        this.campaignCtrl.setValue(''); 
+        this.campaignCtrl.setValue('');
       }
     });
   }
@@ -151,10 +129,6 @@ export class BonusPageComponent {
       next: (res: any) => {
         this.allUsers = res.users;
         this.dataSource1 = this.allUsers;
-        // this.totalRecords = res.pagination?.total || 0;
-
-        // this.allUsers = res.users;
-        // this.dataSource1 = [...res.users];
         this.totalRecords = res.pagination.total;
       }
     });
