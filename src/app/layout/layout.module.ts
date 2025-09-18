@@ -25,7 +25,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DashboardMetaComponent } from './dashboard-meta/dashboard-meta.component';
-import { WhatsUpUsersComponent } from './whats-up-users/whats-up-users.component';  // ✅ Add this
+import { WhatsUpUsersComponent } from './whats-up-users/whats-up-users.component';
+import { GoogleCompaignAnalyticsComponent } from './google-compaign-analytics/google-compaign-analytics.component';  // ✅ Add this
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { WhatsUpUsersComponent } from './whats-up-users/whats-up-users.component
     BonusPageComponent,
     DashboardGoogleComponent,
     DashboardMetaComponent,
-    WhatsUpUsersComponent
+    WhatsUpUsersComponent,
+    GoogleCompaignAnalyticsComponent
   ],
   imports: [
     CommonModule,

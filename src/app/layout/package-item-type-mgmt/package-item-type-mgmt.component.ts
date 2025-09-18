@@ -26,6 +26,8 @@ export class PackageItemTypeMgmtComponent implements OnInit {
   domainList: any[] = [
   ];
   filteredDomainList: any[] = [];
+  mediumList: string[] = ['Google', 'Facebook', 'Instagram', 'youtube', 'Telegram', 'IMO', 'TikTok', 'whatsApp'];
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: any) {
     const clickedInside = event.target.closest('.dp-down');
@@ -42,17 +44,20 @@ export class PackageItemTypeMgmtComponent implements OnInit {
       domainId: [null],
       companyId: [null],
       from: [null],
-      to: [null]
+      to: [null],
+      medium: [''],
     });
   }
 
-  ngOnInit(): void {
+
+   ngOnInit(): void {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
-    this.form = this.fb.group({
-      from: new FormControl(this.formatDate(sevenDaysAgo)),
-      to: new FormControl(this.formatDate(today)),
+
+    this.form.patchValue({
+      from: this.formatDate(sevenDaysAgo),
+      to: this.formatDate(today),
     });
 
     this.getDomainList();
@@ -158,7 +163,7 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     };
     this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1 = res.users;
+        this.dataSource1 = [...res.users];
         this.totalRecords = res.pagination.total;
       }
     });

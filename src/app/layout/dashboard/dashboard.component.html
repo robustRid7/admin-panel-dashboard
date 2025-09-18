@@ -1,86 +1,112 @@
 <div class="dashboard-container">
-    <form [formGroup]="form" class="row align-items-end mb-5">
+  <form [formGroup]="form" class="row align-items-end mb-5">
 
-          <!-- Campaign Dropdown with Search -->
-          <div class="col-md-3 position-relative dp-down">
-            <label class="form-label">Select campaign</label>
-            <input type="text" class="form-control" placeholder="Search campaign" [formControl]="campaignCtrl"
-              (input)="filterCampaigns()" (click)="toggleDropdown()">
-
-            <!-- Dropdown List -->
-            <ul class="list-group position-absolute w-100 group-list" *ngIf="showDropdown && filteredCampaignsList.length > 0"
-              >
-              <li class="list-group-item list-group-item-action" [title]="c.campaignId" *ngFor="let c of filteredCampaignsList"
-                (click)="selectCampaign(c)">
-                {{ c.campaignId }}
-              </li>
-            </ul>
-          </div>
-
-          <!-- From Date -->
-          <div class="col-md-3">
-            <label class="form-label">From Date</label>
-            <input type="date" class="form-control" formControlName="from">
-          </div>
-
-          <!-- To Date -->
-          <div class="col-md-3">
-            <label class="form-label">To Date</label>
-            <input type="date" class="form-control" formControlName="to">
-          </div>
-
-           <div class="col-md-3 d-flex gap-2">
-            <button type="button" class="btn btn-primary w-50" (click)="search()">
-              <i class="bi bi-search"></i> Search
-            </button>
-            <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
-              <i class="bi bi-arrow-counterclockwise"></i> Reset
-            </button>
-          </div>
-        </form>
-    <!-- Stats Cards -->
-    <div class="stats-grid">
+    <div class="col-md-3 position-relative dp-down">
+      <label class="form-label">Select Domain</label>
+      <!-- <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()"> -->
+      <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+        (input)="filterDomains()" (click)="toggleDomainDropdown()">
 
 
-        <mat-card class="stat-card landing" routerLink="/admin/landing-page">
-            <mat-card-title>LandingPage Users</mat-card-title>
-            <mat-card-content>
-                <h2>{{ landingCount }}</h2>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="stat-card bonus" routerLink="/admin/bonus-page">
-            <mat-card-title>BonusPage Users</mat-card-title>
-            <mat-card-content>
-                <h2>{{ bonusCount }}</h2>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="stat-card whatsup" routerLink="/admin/whats-up-users">
-            <mat-card-title> WhatsApp Users</mat-card-title>
-            <mat-card-content>
-                <h2>{{ whatsupCount }}</h2>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="stat-card signup" routerLink="/admin/package-item-type-mgmt">
-            <mat-card-title>Signup Users</mat-card-title>
-            <mat-card-content>
-                <h2>{{ signupCount }}</h2>
-            </mat-card-content>
-        </mat-card>
-
-        <mat-card class="stat-card deposit">
-            <mat-card-title>Users Deposit</mat-card-title>
-            <mat-card-content>
-                <h2>0</h2>
-            </mat-card-content>
-        </mat-card>
+      <!-- Dropdown List -->
+      <ul class="list-group position-absolute w-100" *ngIf="showDomainDropdown && filteredDomainList.length > 0"
+        style="z-index:1000; max-height:200px; overflow-y:auto;">
+        <li class="list-group-item list-group-item-action" [title]="d.domainName" *ngFor="let d of filteredDomainList"
+          (click)="selectDomain(d)">
+          {{ d.domain }}
+        </li>
+      </ul>
     </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Select Medium</label>
+      <select class="form-control" formControlName="medium">
+        <option value="" disabled>-- Select Medium --</option>
+        <option *ngFor="let m of mediumList" [value]="m">{{ m }}</option>
+      </select>
+    </div>
+
+    <!-- Campaign Dropdown with Search -->
+    <div class="col-md-3 position-relative dp-down">
+      <label class="form-label">Select campaign</label>
+      <input type="text" class="form-control" placeholder="Search campaign" [formControl]="campaignCtrl"
+        (input)="filterCampaigns()" (click)="toggleDropdown()">
+
+      <!-- Dropdown List -->
+      <ul class="list-group position-absolute w-100 group-list"
+        *ngIf="showDropdown && filteredCampaignsList.length > 0">
+        <li class="list-group-item list-group-item-action" [title]="c.campaignId"
+          *ngFor="let c of filteredCampaignsList" (click)="selectCampaign(c)">
+          {{ c.campaignId }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- From Date -->
+    <div class="col-md-3">
+      <label class="form-label">From Date</label>
+      <input type="date" class="form-control" formControlName="from">
+    </div>
+
+    <!-- To Date -->
+    <div class="col-md-3">
+      <label class="form-label m-3">To Date</label>
+      <input type="date" class="form-control" formControlName="to">
+    </div>
+
+    <div class="col-md-3 mt-4 d-flex gap-2">
+      <button type="button" class="btn btn-primary w-50" (click)="search()">
+        <i class="bi bi-search"></i> Search
+      </button>
+      <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset
+      </button>
+    </div>
+  </form>
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+
+
+    <mat-card class="stat-card landing" routerLink="/admin/landing-page">
+      <mat-card-title>LandingPage Users</mat-card-title>
+      <mat-card-content>
+        <h2>{{ landingCount }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card bonus" routerLink="/admin/bonus-page">
+      <mat-card-title>BonusPage Users</mat-card-title>
+      <mat-card-content>
+        <h2>{{ bonusCount }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card whatsup" routerLink="/admin/whats-up-users">
+      <mat-card-title> WhatsApp Users</mat-card-title>
+      <mat-card-content>
+        <h2>{{ whatsupCount }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card signup" routerLink="/admin/package-item-type-mgmt">
+      <mat-card-title>Signup Users</mat-card-title>
+      <mat-card-content>
+        <h2>{{ signupCount }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card deposit">
+      <mat-card-title>Users Deposit</mat-card-title>
+      <mat-card-content>
+        <h2>0</h2>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
 
 
 <div class="charts-container">
-    <div class="chart-box">
-        <canvas #chart1 height="340"></canvas>
-    </div>
+  <div class="chart-box">
+    <canvas #chart1 height="340"></canvas>
+  </div>

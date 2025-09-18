@@ -2,7 +2,7 @@
   <div class="row align-items-center">
     <div class="col-12">
       <div class="heading-row">
-        <h3>WhatsApp Users</h3>
+        <h3>Other Platform Users</h3>
       </div>
     </div>
   </div>
@@ -11,33 +11,43 @@
   <div class="shadow-box mt-0 p-3">
     <form [formGroup]="form" class="row g-3 align-items-end">
 
-       <div class="col-md-3 position-relative dp-down">
-            <label class="form-label">Select Domain</label>
-            <!-- <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+      <div class="col-md-3 position-relative dp-down">
+        <label class="form-label">Select Domain</label>
+        <!-- <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
               (input)="filterDomains()" (click)="toggleDomainDropdown()"> -->
-            <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
-              (input)="filterDomains()" (click)="toggleDomainDropdown()">
+        <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+          (input)="filterDomains()" (click)="toggleDomainDropdown()">
 
 
-            <!-- Dropdown List -->
-            <ul class="list-group position-absolute w-100" *ngIf="showDomainDropdown && filteredDomainList.length > 0"
-              style="z-index:1000; max-height:200px; overflow-y:auto;">
-              <li class="list-group-item list-group-item-action" [title]="d.domainName"
-                *ngFor="let d of filteredDomainList" (click)="selectDomain(d)">
-                {{ d.domain }}
-              </li>
-            </ul>
-          </div>
+        <!-- Dropdown List -->
+        <ul class="list-group position-absolute w-100" *ngIf="showDomainDropdown && filteredDomainList.length > 0"
+          style="z-index:1000; max-height:200px; overflow-y:auto;">
+          <li class="list-group-item list-group-item-action" [title]="d.domainName" *ngFor="let d of filteredDomainList"
+            (click)="selectDomain(d)">
+            {{ d.domain }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Select Medium</label>
+        <select class="form-control" formControlName="medium">
+          <option value="" disabled>-- Select Medium --</option>
+          <option *ngFor="let m of mediumList" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+
       <div class="col-md-3 position-relative dp-down">
         <label class="form-label">Select campaign</label>
         <input type="text" class="form-control" placeholder="Search campaign" [formControl]="campaignCtrl"
           (input)="filterCampaigns()" (click)="toggleDropdown()">
 
         <!-- Dropdown List -->
-        <ul class="list-group position-absolute w-100 group-list" *ngIf="showDropdown && filteredCampaignsList.length > 0"
+        <ul class="list-group position-absolute w-100 group-list"
+          *ngIf="showDropdown && filteredCampaignsList.length > 0"
           style="z-index:1000; max-height:200px; overflow-y:auto;">
-          <li class="list-group-item list-group-item-action" [title]="c.campaignId" *ngFor="let c of filteredCampaignsList"
-            (click)="selectCampaign(c)">
+          <li class="list-group-item list-group-item-action" [title]="c.campaignId"
+            *ngFor="let c of filteredCampaignsList" (click)="selectCampaign(c)">
             {{ c.campaignId }} - {{ c.campaignName }}
           </li>
         </ul>
@@ -53,14 +63,14 @@
         <input type="date" class="form-control" formControlName="to" />
       </div>
 
-       <div class="col-md-3 d-flex gap-2">
-            <button type="button" class="btn btn-primary w-50" (click)="search()">
-              <i class="bi bi-search"></i> Search
-            </button>
-            <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
-              <i class="bi bi-arrow-counterclockwise"></i> Reset
-            </button>
-          </div>
+      <div class="col-md-3 d-flex gap-2">
+        <button type="button" class="btn btn-primary w-50" (click)="search()">
+          <i class="bi bi-search"></i> Search
+        </button>
+        <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset
+        </button>
+      </div>
     </form>
   </div>
 

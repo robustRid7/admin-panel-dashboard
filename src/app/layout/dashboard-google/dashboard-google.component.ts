@@ -34,8 +34,14 @@ export class DashboardGoogleComponent {
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
   allUsers: any[] = [];
+  domainCtrl = new FormControl('');
+  showDomainDropdown = false;
+  domainList: any[] = [
+  ];
+  filteredDomainList: any[] = [];
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
+      domainId: [null],
       companyId: [null],
       from: [null],
       to: [null]
@@ -53,12 +59,12 @@ export class DashboardGoogleComponent {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
-    this.form = this.fb.group({
-      from: new FormControl(this.formatDate(sevenDaysAgo)),
-      to: new FormControl(this.formatDate(today)),
+    this.form.patchValue({
+      from: this.formatDate(sevenDaysAgo),
+      to: this.formatDate(today),
     });
 
-    this.getComapinList();
+    this.getDomainList();
     this.loadCounts({});
     this.loadAnalyticsForChart2({});
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
@@ -83,6 +89,42 @@ export class DashboardGoogleComponent {
   }
 
 
+  getDomainList() {
+    this.api.getDomainList({}).subscribe({
+      next: (res: any) => {
+        this.domainList = res.data || [];
+        this.filteredDomainList = [...this.domainList];
+        // this.filteredCampaignsList = [...this.comapinList];
+      }
+    });
+  }
+
+  selectDomain(domain: any) {
+    // jo field tumhare API se aa rahi hai usko set karo
+    this.domainCtrl.setValue(domain.domainName || domain.domain);
+    this.form.get('domainId')?.setValue(domain._id);
+    this.showDomainDropdown = false;
+
+    this.getComapinList(domain._id);
+  }
+
+  toggleDomainDropdown() {
+    this.showDomainDropdown = !this.showDomainDropdown;
+    if (this.showDomainDropdown) {
+      this.filteredDomainList = [...this.domainList];
+    }
+  }
+
+  filterDomains() {
+    const searchValue = this.domainCtrl.value?.toLowerCase() || '';
+    this.filteredDomainList = this.domainList.filter(d =>
+      d.domainName.toLowerCase().includes(searchValue) ||
+      d.domainId.toString().includes(searchValue)
+    );
+    this.showDomainDropdown = true;
+  }
+
+
   // selectCampaign(event: any) {
   //   const selected = event.option.value;
   //   const campaign = this.comapinList.find(c => c.campaignId === selected);
@@ -96,18 +138,29 @@ export class DashboardGoogleComponent {
   //   this.renderStaticChart();
   // }
 
-  getComapinList() {
-    this.api.getDashBoardCompainList({ medium: "google" }).subscribe({
+  // getComapinList() {
+  //   this.api.getDashBoardCompainList({ medium: "google" }).subscribe({
+  //     next: (res: any) => {
+  //       this.comapinList = res.data;
+  //       this.filteredCampaignsList = [...this.comapinList];
+  //       this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
+  //         startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
+  //         map(value => this._filterCampaigns(value || ''))
+  //       );
+  //     }
+  //   });
+  // }
+
+  getComapinList(domainId: string) {
+    this.api.getDashBoardCompainList({ domain: domainId, medium: "google" }).subscribe({
       next: (res: any) => {
-        this.comapinList = res.data;
+        this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];
-        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
-          map(value => this._filterCampaigns(value || ''))
-        );
+        this.campaignCtrl.setValue('');
       }
     });
   }
+
 
   search() {
     const formValues = this.form.value;
@@ -204,87 +257,87 @@ export class DashboardGoogleComponent {
   //   });
   // }
   loadAnalyticsForChart2(payload: any) {
-  this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
-    next: (res: any) => {
-      if (res?.data) {
-        const data = res.data;
+    this.api.getDashboardThirdPartyAnalytics(payload).subscribe({
+      next: (res: any) => {
+        if (res?.data) {
+          const data = res.data;
 
-        // Set stats for top boxes
-        this.totalActiveUsers = data.totalActiveUsers ?? 0;
-        this.totalSessions = data.totalSessions ?? 0;
-        this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
-        this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
+          // Set stats for top boxes
+          this.totalActiveUsers = data.totalActiveUsers ?? 0;
+          this.totalSessions = data.totalSessions ?? 0;
+          this.totalScreenPageViews = data.totalScreenPageViews ?? 0;
+          this.totalEngagedSessions = data.totalEngagedSessions ?? 0;
 
-        // Prepare chart data
-        let graph = data.graphData || [];
+          // Prepare chart data
+          let graph = data.graphData || [];
 
-        // ✅ Dates ko sort kar lo
-        graph = graph.sort(
-          (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
+          // ✅ Dates ko sort kar lo
+          graph = graph.sort(
+            (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          );
 
-        const labels = graph.map((g: any) => g.date);
-        const activeUsersData = graph.map((g: any) => g.activeUsers);
-        const sessionsData = graph.map((g: any) => g.sessions);
-        const pageViewsData = graph.map((g: any) => g.screenPageViews);
-        const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
+          const labels = graph.map((g: any) => g.date);
+          const activeUsersData = graph.map((g: any) => g.activeUsers);
+          const sessionsData = graph.map((g: any) => g.sessions);
+          const pageViewsData = graph.map((g: any) => g.screenPageViews);
+          const engagedSessionsData = graph.map((g: any) => g.engagedSessions);
 
-        const datasets = [
-          {
-            label: 'Active Users',
-            data: activeUsersData,
-            borderColor: '#4caf50',
-            backgroundColor: '#4caf50',
-            fill: false,
-            tension: 0.4
-          },
-          {
-            label: 'Sessions',
-            data: sessionsData,
-            borderColor: '#2196f3',
-            backgroundColor: '#2196f3',
-            fill: false,
-            tension: 0.4
-          },
-          {
-            label: 'Page Views',
-            data: pageViewsData,
-            borderColor: '#ff9800',
-            backgroundColor: '#ff9800',
-            fill: false,
-            tension: 0.4
-          },
-          {
-            label: 'Engaged Sessions',
-            data: engagedSessionsData,
-            borderColor: '#9c27b0',
-            backgroundColor: '#9c27b0',
-            fill: false,
-            tension: 0.4
-          }
-        ];
+          const datasets = [
+            {
+              label: 'Active Users',
+              data: activeUsersData,
+              borderColor: '#4caf50',
+              backgroundColor: '#4caf50',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Sessions',
+              data: sessionsData,
+              borderColor: '#2196f3',
+              backgroundColor: '#2196f3',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Page Views',
+              data: pageViewsData,
+              borderColor: '#ff9800',
+              backgroundColor: '#ff9800',
+              fill: false,
+              tension: 0.4
+            },
+            {
+              label: 'Engaged Sessions',
+              data: engagedSessionsData,
+              borderColor: '#9c27b0',
+              backgroundColor: '#9c27b0',
+              fill: false,
+              tension: 0.4
+            }
+          ];
 
-        if (this.chart2) this.chart2.destroy();
-        if (this.chartRef2?.nativeElement) {
-          this.chart2 = new Chart(this.chartRef2.nativeElement, {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: {
-                  ticks: { autoSkip: true, maxTicksLimit: 10 } // zyada dates ho to skip
+          if (this.chart2) this.chart2.destroy();
+          if (this.chartRef2?.nativeElement) {
+            this.chart2 = new Chart(this.chartRef2.nativeElement, {
+              type: 'line',
+              data: { labels, datasets },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  x: {
+                    ticks: { autoSkip: true, maxTicksLimit: 10 } // zyada dates ho to skip
+                  }
                 }
               }
-            }
-          });
+            });
+          }
         }
-      }
-    },
-    error: (err: any) => { }
-  });
-}
+      },
+      error: (err: any) => { }
+    });
+  }
 
   filterCampaigns() {
     const value = this.campaignCtrl.value?.toLowerCase() || '';
@@ -306,13 +359,15 @@ export class DashboardGoogleComponent {
     this.form.patchValue({ companyId: campaign._id });
     this.showDropdown = false;
   }
-    resetFilters() {
-  this.form.reset();
-  this.campaignCtrl.setValue('');
-  this.form.patchValue({ companyId: null });
+  resetFilters() {
+    this.form.reset();
+    this.campaignCtrl.setValue('');
+    this.form.patchValue({ companyId: null });
+    this.domainCtrl.setValue('');
+    this.form.patchValue({ domainId: null });
 
-  // this.pageIndex = 0;
+    // this.pageIndex = 0;
 
-//  this.dataSource1 = [...this.allUsers];
-}
+    //  this.dataSource1 = [...this.allUsers];
+  }
 }

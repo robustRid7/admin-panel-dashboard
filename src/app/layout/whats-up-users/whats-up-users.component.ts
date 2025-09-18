@@ -28,6 +28,8 @@ export class WhatsUpUsersComponent {
   showDropdown: boolean = false;
   filteredCampaignsList: any[] = [];
   allUsers: any[] = [];
+  mediumList: string[] = ['Google', 'Facebook', 'Instagram', 'youtube', 'Telegram', 'IMO', 'TikTok', 'whatsApp'];
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: any) {
     const clickedInside = event.target.closest('.dp-down');
@@ -44,7 +46,8 @@ export class WhatsUpUsersComponent {
       domainId: [null],
       companyId: [null],
       from: [null],
-      to: [null]
+      to: [null],
+      medium: [''],
     });
   }
 
@@ -52,9 +55,10 @@ export class WhatsUpUsersComponent {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
-    this.form = this.fb.group({
-      from: new FormControl(this.formatDate(sevenDaysAgo)),
-      to: new FormControl(this.formatDate(today)),
+
+    this.form.patchValue({
+      from: this.formatDate(sevenDaysAgo),
+      to: this.formatDate(today),
     });
 
     this.getDomainList();

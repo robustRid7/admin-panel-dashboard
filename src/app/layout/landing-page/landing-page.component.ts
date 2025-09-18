@@ -34,6 +34,9 @@ export class LandingPageComponent {
       this.showDropdown = false;
     }
   }
+
+  mediumList: string[] = ['Google', 'Facebook', 'Instagram', 'youtube', 'Telegram', 'IMO', 'TikTok', 'whatsApp'];
+
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
@@ -43,7 +46,8 @@ export class LandingPageComponent {
       domainId: [null],
       companyId: [null],
       from: [null],
-      to: [null]
+      to: [null],
+      medium: [''],
     });
   }
 
@@ -63,13 +67,15 @@ export class LandingPageComponent {
     }
   }
 
+
   ngOnInit(): void {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
-    this.form = this.fb.group({
-      from: new FormControl(this.formatDate(sevenDaysAgo)),
-      to: new FormControl(this.formatDate(today)),
+
+    this.form.patchValue({
+      from: this.formatDate(sevenDaysAgo),
+      to: this.formatDate(today),
     });
 
     this.getDomainList();

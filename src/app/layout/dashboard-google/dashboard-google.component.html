@@ -34,6 +34,24 @@
     </form> -->
      <form [formGroup]="form" class="row align-items-end mb-5">
 
+           <div class="col-md-3 position-relative dp-down">
+            <label class="form-label">Select Domain</label>
+            <!-- <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()"> -->
+            <input type="text" class="form-control" placeholder="Search domain" [formControl]="domainCtrl"
+              (input)="filterDomains()" (click)="toggleDomainDropdown()">
+
+
+            <!-- Dropdown List -->
+            <ul class="list-group position-absolute w-100" *ngIf="showDomainDropdown && filteredDomainList.length > 0"
+              style="z-index:1000; max-height:200px; overflow-y:auto;">
+              <li class="list-group-item list-group-item-action" [title]="d.domainName"
+                *ngFor="let d of filteredDomainList" (click)="selectDomain(d)">
+                {{ d.domain }}
+              </li>
+            </ul>
+          </div>
+
           <!-- Campaign Dropdown with Search -->
           <div class="col-md-3 position-relative dp-down">
             <label class="form-label">Select campaign</label>
@@ -62,7 +80,7 @@
             <input type="date" class="form-control" formControlName="to">
           </div>
 
-           <div class="col-md-3 d-flex gap-2">
+           <div class="col-md-3 mt-4 d-flex gap-3">
             <button type="button" class="btn btn-primary w-50" (click)="search()">
               <i class="bi bi-search"></i> Search
             </button>

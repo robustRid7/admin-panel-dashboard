@@ -31,6 +31,16 @@
           </div>
 
 
+          <div class="col-md-3">
+            <label class="form-label">Select Medium</label>
+            <select class="form-control" formControlName="medium">
+              <option value="" disabled>-- Select Medium --</option>
+              <option *ngFor="let m of mediumList" [value]="m">{{ m }}</option>
+            </select>
+          </div>
+
+
+
           <!-- Campaign -->
           <div class="col-md-3 position-relative dp-down">
             <label class="form-label">Select campaign</label>
@@ -86,7 +96,7 @@
                   <th>Bonus - Id</th>
                   <th>Domain</th>
                   <th>Medium</th>
-                    <th>Landing Page Domain</th>
+                  <th>Landing Page Domain</th>
                   <th>Created At</th>
                 </tr>
               </thead>

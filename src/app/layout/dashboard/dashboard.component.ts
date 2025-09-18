@@ -30,20 +30,26 @@ export class DashboardComponent implements OnInit {
   totalSessions = 0;
   totalScreenPageViews = 0;
   totalEngagedSessions = 0;
-
-
-
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
   allUsers: any[] = [];
+  domainCtrl = new FormControl('');
+  showDomainDropdown = false;
+  domainList: any[] = [
+  ];
+  filteredDomainList: any[] = [];
+  mediumList: string[] = ['Google', 'Facebook', 'Instagram', 'youtube', 'Telegram', 'IMO', 'TikTok', 'whatsApp'];
+
   constructor(private fb: FormBuilder,
     private api: ApiService,
     private filterService: FilterServiceService
   ) {
     this.form = this.fb.group({
+      domainId: [null],
       companyId: [null],
       from: [null],
-      to: [null]
+      to: [null],
+      medium: [''],
     });
     Chart.register(...registerables);
   }
@@ -58,12 +64,12 @@ export class DashboardComponent implements OnInit {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
-    this.form = this.fb.group({
-      from: new FormControl(this.formatDate(sevenDaysAgo)),
-      to: new FormControl(this.formatDate(today)),
+    this.form.patchValue({
+      from: this.formatDate(sevenDaysAgo),
+      to: this.formatDate(today),
     });
 
-    this.getComapinList();
+    this.getDomainList();
     this.loadAnalytics({});
 
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
@@ -89,15 +95,48 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  getComapinList() {
-    this.api.getDashBoardCompainList({}).subscribe({
+  getDomainList() {
+    this.api.getDomainList({}).subscribe({
+      next: (res: any) => {
+        this.domainList = res.data || [];
+        this.filteredDomainList = [...this.domainList];
+        // this.filteredCampaignsList = [...this.comapinList];
+      }
+    });
+  }
+
+  selectDomain(domain: any) {
+    // jo field tumhare API se aa rahi hai usko set karo
+    this.domainCtrl.setValue(domain.domainName || domain.domain);
+    this.form.get('domainId')?.setValue(domain._id);
+    this.showDomainDropdown = false;
+
+    this.getComapinList(domain._id);
+  }
+
+  toggleDomainDropdown() {
+    this.showDomainDropdown = !this.showDomainDropdown;
+    if (this.showDomainDropdown) {
+      this.filteredDomainList = [...this.domainList];
+    }
+  }
+
+  filterDomains() {
+    const searchValue = this.domainCtrl.value?.toLowerCase() || '';
+    this.filteredDomainList = this.domainList.filter(d =>
+      d.domainName.toLowerCase().includes(searchValue) ||
+      d.domainId.toString().includes(searchValue)
+    );
+    this.showDomainDropdown = true;
+  }
+
+
+  getComapinList(domainId: string) {
+    this.api.getDashBoardCompainList({ domain: domainId }).subscribe({
       next: (res: any) => {
         this.comapinList = res.data || [];
         this.filteredCampaignsList = [...this.comapinList];
-        this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
-          startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
-          map(value => this._filterCampaigns(value || ''))
-        );
+        this.campaignCtrl.setValue('');
       }
     });
   }
@@ -310,10 +349,12 @@ export class DashboardComponent implements OnInit {
     this.showDropdown = false;
   }
   resetFilters() {
-  this.form.reset();
-  this.campaignCtrl.setValue('');
-  this.form.patchValue({ companyId: null });
+    this.form.reset();
+    this.campaignCtrl.setValue('');
+    this.form.patchValue({ companyId: null });
+    this.domainCtrl.setValue('');
+    this.form.patchValue({ domainId: null });
 
-  // this.pageIndex = 0;
-}
+    // this.pageIndex = 0;
+  }
 }

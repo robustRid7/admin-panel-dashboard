@@ -26,6 +26,8 @@ export class BonusPageComponent {
   domainList: any[] = [
   ];
   filteredDomainList: any[] = [];
+  mediumList: string[] = ['Google', 'Facebook', 'Instagram', 'youtube', 'Telegram', 'IMO', 'TikTok', 'whatsApp'];
+
   constructor(
     private api: ApiService,
     private fb: FormBuilder,
@@ -35,7 +37,8 @@ export class BonusPageComponent {
       domainId: [null],
       companyId: [null],
       from: [null],
-      to: [null]
+      to: [null],
+      medium: [null],
     });
   }
   @HostListener('document:click', ['$event'])
@@ -49,14 +52,16 @@ export class BonusPageComponent {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
-    this.form = this.fb.group({
-      from: new FormControl(this.formatDate(sevenDaysAgo)),
-      to: new FormControl(this.formatDate(today)),
+
+    this.form.patchValue({
+      from: this.formatDate(sevenDaysAgo),
+      to: this.formatDate(today),
     });
 
     this.getDomainList();
     this.getSignUpUsers();
   }
+
 
   private formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
@@ -184,10 +189,11 @@ export class BonusPageComponent {
       limit: this.pageSize,
       filters: filters
     };
+    console.log(filters, "shhshshs");
 
     this.api.bonusPageList(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1.data = res.users || [];
+        this.dataSource1=[...res.users]
         this.totalRecords = res.pagination?.total || 0;
       }
     });

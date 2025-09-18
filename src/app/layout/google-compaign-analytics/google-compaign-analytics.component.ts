@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
 import { ApiService } from 'src/app/service/api.service';
 import { startWith, map } from 'rxjs/operators';
 @Component({
-  selector: 'app-dashboard-meta',
-  templateUrl: './dashboard-meta.component.html',
-  styleUrls: ['./dashboard-meta.component.css']
+  selector: 'app-google-compaign-analytics',
+  templateUrl: './google-compaign-analytics.component.html',
+  styleUrls: ['./google-compaign-analytics.component.css']
 })
-export class DashboardMetaComponent {
+export class GoogleCompaignAnalyticsComponent {
 
   @ViewChild('chart2', { static: false }) chartRef2!: ElementRef<HTMLCanvasElement>;
 
@@ -69,7 +69,6 @@ export class DashboardMetaComponent {
       map(value => this._filterCampaigns(value || ''))
     );
   }
-
 
   private formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
