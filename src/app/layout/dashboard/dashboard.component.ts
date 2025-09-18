@@ -293,8 +293,6 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleDropdown() {
-    console.log("hii", this.showDropdown);
-
     this.showDropdown = !this.showDropdown;
   }
 
@@ -303,5 +301,13 @@ export class DashboardComponent implements OnInit {
     this.form.patchValue({ companyId: campaign._id });
     this.showDropdown = false;
   }
+  resetFilters() {
+  this.form.reset();
+  this.campaignCtrl.setValue('');
+  this.form.patchValue({ companyId: null });
 
+  // this.pageIndex = 0;
+
+  this.getComapinList();
+}
 }

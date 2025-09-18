@@ -21,7 +21,7 @@ table tbody tr td{
 }
 .list-group-item-action{
 text-overflow: ellipsis;
-    max-width: 18rem;
+    max-width: 20rem;
     white-space: nowrap;
     overflow: hidden;
     line-height: 0;
@@ -30,4 +30,12 @@ text-overflow: ellipsis;
 .list-group {
   background-color: #fff;
   overflow-x: hidden;
+}
+.group-list{
+  width: 93% !important;
+  z-index:1000;
+  max-height:200px;
+  overflow-y:auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
 }

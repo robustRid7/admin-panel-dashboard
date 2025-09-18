@@ -1,6 +1,5 @@
 <div class="dashboard-container">
-    <form [formGroup]="form">
-        <!-- Filters -->
+    <!-- <form [formGroup]="form">
         <div class="filter-bar">
             <mat-form-field appearance="outline" class="filter-item">
                 <mat-label>Select campaign</mat-label>
@@ -32,7 +31,47 @@
                 <mat-icon>search</mat-icon> Search
             </button>
         </div>
-    </form>
+    </form> -->
+        <form [formGroup]="form" class="row align-items-end mb-5">
+
+          <!-- Campaign Dropdown with Search -->
+          <div class="col-md-3 position-relative dp-down">
+            <label class="form-label">Select campaign</label>
+            <input type="text" class="form-control" placeholder="Search campaign" [formControl]="campaignCtrl"
+              (input)="filterCampaigns()" (click)="toggleDropdown()">
+
+            <!-- Dropdown List -->
+            <ul class="list-group position-absolute w-100 group-list" *ngIf="showDropdown && filteredCampaignsList.length > 0"
+              style="z-index:1000; max-height:200px; overflow-y:auto;overflow-x: hidden;">
+              <li class="list-group-item list-group-item-action" [title]="c.campaignId" *ngFor="let c of filteredCampaignsList"
+                (click)="selectCampaign(c)">
+                {{ c.campaignId }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- From Date -->
+          <div class="col-md-3">
+            <label class="form-label">From Date</label>
+            <input type="date" class="form-control" formControlName="from">
+          </div>
+
+          <!-- To Date -->
+          <div class="col-md-3">
+            <label class="form-label">To Date</label>
+            <input type="date" class="form-control" formControlName="to">
+          </div>
+
+           <div class="col-md-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary w-50" (click)="search()">
+              <i class="bi bi-search"></i> Search
+            </button>
+            <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </button>
+          </div>
+        </form>
+
     <!-- Stats Cards -->
     <div class="stats-grid">
         <mat-card class="stat-card impressions">

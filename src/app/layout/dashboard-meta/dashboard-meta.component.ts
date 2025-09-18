@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // import * as Chart from 'chart.js';
 
@@ -29,6 +29,15 @@ export class DashboardMetaComponent {
   totalEngagedSessions = 0;
   campaignCtrl = new FormControl('');
   filteredCampaigns!: Observable<any[]>;
+  filteredCampaignsList: any[] = [];
+  showDropdown: boolean = false;
+    @HostListener('document:click', ['$event'])
+    onClickOutside(event: any) {
+      const clickedInside = event.target.closest('.dp-down');
+      if (!clickedInside) {
+        this.showDropdown = false;
+      }
+    }
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       companyId: [null],
@@ -59,13 +68,13 @@ export class DashboardMetaComponent {
   }
 
 
-  selectCampaign(event: any) {
-    const selected = event.option.value;
-    const campaign = this.comapinList.find(c => c.campaignId === selected);
-    if (campaign) {
-      this.form.patchValue({ companyId: campaign._id });
-    }
-  }
+  // selectCampaign(event: any) {
+  //   const selected = event.option.value;
+  //   const campaign = this.comapinList.find(c => c.campaignId === selected);
+  //   if (campaign) {
+  //     this.form.patchValue({ companyId: campaign._id });
+  //   }
+  // }
 
   // ngAfterViewInit() {
   //   // Chart2 static hamesha render karega
@@ -76,6 +85,7 @@ export class DashboardMetaComponent {
     this.api.getDashBoardCompainList({ medium: "meta" }).subscribe({
       next: (res: any) => {
         this.comapinList = res.data;
+        this.filteredCampaignsList = [...this.comapinList];
         this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
           startWith(''), // 👈 yahi ensure karega ki dropdown khulte hi full list dikhe
           map(value => this._filterCampaigns(value || ''))
@@ -173,5 +183,33 @@ export class DashboardMetaComponent {
       }
     });
   }
+  filterCampaigns() {
+    const value = this.campaignCtrl.value?.toLowerCase() || '';
+    if (!value) {
+      this.filteredCampaignsList = [...this.comapinList];
+    } else {
+      this.filteredCampaignsList = this.comapinList.filter(c =>
+        c.campaignId.toLowerCase().includes(value)
+      );
+    }
+  }
 
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  selectCampaign(campaign: any) {
+    this.campaignCtrl.setValue(campaign.campaignId);
+    this.form.patchValue({ companyId: campaign._id });
+    this.showDropdown = false;
+  }
+    resetFilters() {
+  this.form.reset();
+  this.campaignCtrl.setValue('');
+  this.form.patchValue({ companyId: null });
+
+  // this.pageIndex = 0;
+
+  this.getComapinList();
+}
 }

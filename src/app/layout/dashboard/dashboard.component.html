@@ -8,8 +8,8 @@
               (input)="filterCampaigns()" (click)="toggleDropdown()">
 
             <!-- Dropdown List -->
-            <ul class="list-group position-absolute w-100" *ngIf="showDropdown && filteredCampaignsList.length > 0"
-              style="z-index:1000; max-height:200px; overflow-y:auto;overflow-x: hidden;">
+            <ul class="list-group position-absolute w-100 group-list" *ngIf="showDropdown && filteredCampaignsList.length > 0"
+              >
               <li class="list-group-item list-group-item-action" [title]="c.campaignId" *ngFor="let c of filteredCampaignsList"
                 (click)="selectCampaign(c)">
                 {{ c.campaignId }}
@@ -33,9 +33,9 @@
             <button type="button" class="btn btn-primary w-50" (click)="search()">
               <i class="bi bi-search"></i> Search
             </button>
-            <!-- <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
+            <button type="button" class="btn btn-danger w-50" (click)="resetFilters()">
               <i class="bi bi-arrow-counterclockwise"></i> Reset
-            </button> -->
+            </button>
           </div>
         </form>
     <!-- Stats Cards -->
