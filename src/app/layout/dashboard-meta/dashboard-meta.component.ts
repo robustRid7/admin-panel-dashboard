@@ -48,12 +48,24 @@ export class DashboardMetaComponent {
   }
 
   ngOnInit(): void {
+    const today = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    this.form = this.fb.group({
+      from: new FormControl(this.formatDate(sevenDaysAgo)),
+      to: new FormControl(this.formatDate(today)),
+    });
+
     this.getComapinList();
     this.loadAnalyticsForMeta({});
     this.filteredCampaigns = this.campaignCtrl.valueChanges.pipe(
       startWith(''),
       map(value => this._filterCampaigns(value || ''))
     );
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 
   private _filterCampaigns(value: string): any[] {

@@ -55,6 +55,14 @@ export class DashboardComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    const today = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    this.form = this.fb.group({
+      from: new FormControl(this.formatDate(sevenDaysAgo)),
+      to: new FormControl(this.formatDate(today)),
+    });
+
     this.getComapinList();
     this.loadAnalytics({});
 
@@ -64,6 +72,10 @@ export class DashboardComponent implements OnInit {
     );
 
 
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 
   private _filterCampaigns(value: string): any[] {
