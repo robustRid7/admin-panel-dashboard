@@ -103,10 +103,33 @@ export class BonusPageComponent {
     this.api.bonusPageList(payload).subscribe({
       next: (res: any) => {
          this.allUsers = res.users;
-        this.dataSource1 = [...res.users];
-        this.totalRecords = res.pagination?.total || 0;
+        this.dataSource1 = this.allUsers;
+        // this.totalRecords = res.pagination?.total || 0;
+
+        // this.allUsers = res.users;
+        // this.dataSource1 = [...res.users];
+        this.totalRecords = res.pagination.total;
       }
     });
+  }
+
+    totalPages() {
+    return Math.ceil(this.totalRecords / this.pageSize);
+  }
+
+    prevPage() {
+    if (this.pageIndex > 0) {
+      this.pageIndex--;
+      this.getSignUpUsers();
+    }
+  }
+
+  nextPage() {
+    if (this.pageIndex + 1 < this.totalPages()) {
+      this.pageIndex++;
+      this.getSignUpUsers();
+    }
+
   }
 
   onPageChange(event: any) {

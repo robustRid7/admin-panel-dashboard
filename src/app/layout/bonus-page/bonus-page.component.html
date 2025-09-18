@@ -66,7 +66,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let element of dataSource1.data; let i = index">
+          <tr *ngFor="let element of dataSource1; let i = index">
             <td>{{ i + 1 + (pageIndex * pageSize) }}</td>
             <td class="ellipsis">{{ element?.campaignId?.campaignId }}</td>
             <td>{{ element?.campaignId?.campaignName }}</td>
@@ -80,36 +80,18 @@
     </div>
 
     <!-- Bootstrap Pagination -->
-    <nav>
-      <ul class="pagination justify-content-end">
-        <li class="page-item" [class.disabled]="pageIndex === 0">
-          <button class="page-link" (click)="onPageChange({ pageIndex: pageIndex - 1, pageSize: pageSize })">
-            Previous
-          </button>
-        </li>
-
-        <li class="page-item disabled">
-          <span class="page-link">
-            Page {{ pageIndex + 1 }} of {{ Math.ceil(totalRecords / pageSize) }}
-          </span>
-        </li>
-
-        <li class="page-item" [class.disabled]="(pageIndex + 1) >= (totalRecords / pageSize)">
-          <button class="page-link" (click)="onPageChange({ pageIndex: pageIndex + 1, pageSize: pageSize })">
-            Next
-          </button>
-        </li>
-
-        <!-- Page Size Selector -->
-        <li class="page-item ms-2">
-          <select class="form-select" style="width:auto;"
-                  (change)="onPageChange({ pageIndex: 0, pageSize: $event.target})">
-            <option [selected]="pageSize==200" value="200">200</option>
-            <option [selected]="pageSize==500" value="500">500</option>
-            <option [selected]="pageSize==1000" value="1000">1000</option>
-          </select>
-        </li>
-      </ul>
-    </nav>
+     <nav *ngIf="totalPages() > 1">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="pageIndex === 0">
+                <button class="page-link" (click)="prevPage()">Previous</button>
+              </li>
+              <li class="page-item disabled">
+                <span class="page-link">{{ pageIndex + 1 }} / {{ totalPages() }}</span>
+              </li>
+              <li class="page-item" [class.disabled]="pageIndex + 1 >= totalPages()">
+                <button class="page-link" (click)="nextPage()">Next</button>
+              </li>
+            </ul>
+          </nav>
   </div>
 </div>
