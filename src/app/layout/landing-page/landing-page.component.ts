@@ -43,7 +43,7 @@ export class LandingPageComponent {
 
   data: any[] = [];
   pageIndex = 0;
-  pageSize = 10;
+  pageSize = 200;
   totalRecords = 0;
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
