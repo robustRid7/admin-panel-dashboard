@@ -42,6 +42,7 @@ export class BonusPageComponent {
   dataSource1: any = { data: [] };
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
+  allUsers: any[] = [];
   constructor(
     private api: ApiService,
     private fb: FormBuilder,
@@ -101,7 +102,8 @@ export class BonusPageComponent {
     };
     this.api.bonusPageList(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1.data = res.users || [];
+         this.allUsers = res.users;
+        this.dataSource1 = [...res.users];
         this.totalRecords = res.pagination?.total || 0;
       }
     });
@@ -141,7 +143,7 @@ resetFilters() {
 
   this.pageIndex = 0;
 
-  this.getSignUpUsers();
+  this.dataSource1 = [...this.allUsers];
 }
 
 }

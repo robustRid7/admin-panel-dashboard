@@ -44,13 +44,14 @@ export class WhatsUpUsersComponent {
   dataSource1: any[] = [];
   showDropdown: boolean = false;
   filteredCampaignsList: any[] = [];
-    @HostListener('document:click', ['$event'])
-    onClickOutside(event: any) {
-      const clickedInside = event.target.closest('.dp-down');
-      if (!clickedInside) {
-        this.showDropdown = false;
-      }
+  allUsers: any[] = [];
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: any) {
+    const clickedInside = event.target.closest('.dp-down');
+    if (!clickedInside) {
+      this.showDropdown = false;
     }
+  }
   constructor(
     private api: ApiService,
     private fb: FormBuilder,
@@ -89,7 +90,7 @@ export class WhatsUpUsersComponent {
     });
   }
 
- selectCampaign(c: any) {
+  selectCampaign(c: any) {
     this.form.patchValue({ companyId: c._id });
     this.campaignCtrl.setValue(c.campaignId, { emitEvent: false });
     this.showDropdown = false;
@@ -104,7 +105,8 @@ export class WhatsUpUsersComponent {
     };
     this.api.getWhatsUpUserList(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1 = res.users;
+        this.allUsers = res.users;
+        this.dataSource1 = [...res.users];
         this.totalRecords = res.pagination.total;
       }
     });
@@ -138,13 +140,13 @@ export class WhatsUpUsersComponent {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
-resetFilters() {
-  this.form.reset();
-  this.campaignCtrl.setValue('');
-  this.form.patchValue({ companyId: null });
+  resetFilters() {
+    this.form.reset();
+    this.campaignCtrl.setValue('');
+    this.form.patchValue({ companyId: null });
 
-  this.pageIndex = 0;
+    this.pageIndex = 0;
 
-  this.getWhatsUpUsers();
-}
+    this.dataSource1 = [...this.allUsers];
+  }
 }

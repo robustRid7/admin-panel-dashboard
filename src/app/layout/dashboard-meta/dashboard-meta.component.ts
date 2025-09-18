@@ -209,7 +209,5 @@ export class DashboardMetaComponent {
   this.form.patchValue({ companyId: null });
 
   // this.pageIndex = 0;
-
-  this.getComapinList();
 }
 }

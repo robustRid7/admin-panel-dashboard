@@ -44,6 +44,7 @@ export class PackageItemTypeMgmtComponent implements OnInit {
   showDropdown: boolean = false;
 
   dataSource1: any[] = [];
+  allUsers: any[] = [];
   @HostListener('document:click', ['$event'])
   onClickOutside(event: any) {
     const clickedInside = event.target.closest('.dp-down');
@@ -103,7 +104,8 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     };
     this.api.signUpUser(payload).subscribe({
       next: (res: any) => {
-        this.dataSource1 = res.users;
+        this.allUsers = res.users;
+        this.dataSource1 = [...res.users];
         this.totalRecords = res.pagination.total;
       }
     });
@@ -146,12 +148,12 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     return Math.ceil(this.totalRecords / this.pageSize);
   }
   resetFilters() {
-  this.form.reset();
-  this.campaignCtrl.setValue('');
-  this.form.patchValue({ companyId: null });
+    this.form.reset();
+    this.campaignCtrl.setValue('');
+    this.form.patchValue({ companyId: null });
 
-  this.pageIndex = 0;
-
-  this.getSignUpUsers();
-}
+    this.pageIndex = 0;
+    this.dataSource1 = [...this.allUsers];
+    // this.getSignUpUsers();
+  }
 }

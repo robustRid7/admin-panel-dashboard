@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
 
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
+  allUsers: any[] = [];
   constructor(private fb: FormBuilder,
     private api: ApiService,
     private filterService: FilterServiceService
@@ -89,11 +90,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
-  // selectCampaign(event: any) {
-  //   const selected = this.comapinList.find(c => c.campaignId === event.option.value);
-  //   this.form.patchValue({ companyId: selected?._id });
-  // }
 
   search() {
     const formValues = this.form.value;
@@ -307,7 +303,5 @@ export class DashboardComponent implements OnInit {
   this.form.patchValue({ companyId: null });
 
   // this.pageIndex = 0;
-
-  this.getComapinList();
 }
 }

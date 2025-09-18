@@ -33,6 +33,7 @@ export class DashboardGoogleComponent {
 
   filteredCampaignsList: any[] = [];
   showDropdown: boolean = false;
+  allUsers: any[] = [];
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       companyId: [null],
@@ -300,6 +301,6 @@ export class DashboardGoogleComponent {
 
   // this.pageIndex = 0;
 
-  this.getComapinList();
+//  this.dataSource1 = [...this.allUsers];
 }
 }
