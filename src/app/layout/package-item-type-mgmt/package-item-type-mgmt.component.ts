@@ -50,7 +50,7 @@ export class PackageItemTypeMgmtComponent implements OnInit {
   }
 
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     const today = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(today.getDate() - 7);
@@ -153,8 +153,17 @@ export class PackageItemTypeMgmtComponent implements OnInit {
     const formValues = this.form.value;
     const filters: any = {};
     if (formValues.companyId) filters.campaignId = formValues.companyId;
-    if (formValues.from) filters.from = new Date(formValues.from).toISOString();
-    if (formValues.to) filters.to = new Date(formValues.to).toISOString();
+    if (formValues.from) {
+      const fromDate = new Date(formValues.from);
+      fromDate.setHours(0, 0, 0, 0);
+      filters.from = fromDate.toISOString();
+    }
+
+    if (formValues.to) {
+      const toDate = new Date(formValues.to);
+      toDate.setHours(23, 59, 59, 999);
+      filters.to = toDate.toISOString();
+    }
 
     const payload = {
       page: this.pageIndex + 1,

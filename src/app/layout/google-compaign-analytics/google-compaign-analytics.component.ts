@@ -48,7 +48,7 @@ export class GoogleCompaignAnalyticsComponent {
   constructor(private fb: FormBuilder, private api: ApiService) {
     this.form = this.fb.group({
       domainId: [null],
-       medium: ['Google'],
+      medium: ['Google'],
       companyId: [null],
       from: [null],
       to: [null]
@@ -178,8 +178,17 @@ export class GoogleCompaignAnalyticsComponent {
     const payload: any = {};
 
     if (formValues.companyId) payload.campaignId = formValues.companyId;
-    if (formValues.from) payload.from = new Date(formValues.from).toISOString();
-    if (formValues.to) payload.to = new Date(formValues.to).toISOString();
+    if (formValues.from) {
+      const fromDate = new Date(formValues.from);
+      fromDate.setHours(0, 0, 0, 0);
+      payload.from = fromDate.toISOString();
+    }
+
+    if (formValues.to) {
+      const toDate = new Date(formValues.to);
+      toDate.setHours(23, 59, 59, 999);
+      payload.to = toDate.toISOString();
+    }
 
     this.loadAnalyticsForMeta(payload);
   }
