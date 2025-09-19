@@ -245,4 +245,11 @@ export class BonusPageComponent {
     this.dataSource1 = [...this.allUsers];
   }
 
+
+  changePage(newPage: number) {
+    if (newPage < 0 || newPage * this.pageSize >= this.totalRecords) return;
+    this.pageIndex = newPage;
+    this.getSignUpUsers();
+  }
+
 }

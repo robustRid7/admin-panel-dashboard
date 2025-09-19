@@ -211,4 +211,10 @@ export class LandingPageComponent {
     }
 
   }
+
+  changePage(newPage: number) {
+    if (newPage < 0 || newPage * this.pageSize >= this.totalRecords) return;
+    this.pageIndex = newPage;
+    this.getSignUpUsers();
+  }
 }
