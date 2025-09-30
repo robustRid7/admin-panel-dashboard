@@ -5,6 +5,11 @@
   .sidenav {
     width: 230px;
   }
+
+  .logo-img{
+    height: 115% !important;
+    width: 150% !important;
+  }
   
   .sidenav .mat-toolbar {
     background: #fff;
